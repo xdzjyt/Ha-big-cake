@@ -1,0 +1,52 @@
+$themes: (
+    light:(
+        primary-100:#FFD700,
+        primary-200:#ddb900,
+        primary-300:#917800,
+        accent-100:#FFB90F,
+        accent-200:#915d00,
+        text-100:#4A4A4A,
+        text-200:#767676,
+        bg-100:#F9E4AD,
+        bg-200:#eedaa3,
+        bg-300:#c5b27d,
+    ),
+    dark:(
+        primary-100:#FFD700,
+        primary-200:#ddb900,
+        primary-300:#917800,
+        accent-100:#c49216,
+        accent-200:#5e3b00,
+        text-100:#dcdcdc,
+        text-200:#929292,
+        bg-100:#1E1E1E,
+        bg-200:#2d2d2d,
+        bg-300:#454545,
+    ),
+);
+
+$curTheme: 'light';//主题标识全局变量
+@mixin useTheme(){
+    @each $key, $value in $themes {
+        $curTheme: $key !global;
+        html[data-theme='#{$key}'] & {
+            @content;
+        }
+    }
+};
+@function getVar($paramName){
+    $themeMap: map-get($themes,$curTheme);
+    @return map-get($themeMap,$paramName);
+};
+
+// 使用方法
+
+// .item {
+//     width: 100px;
+//     height: 100px;
+//     @include useTheme{
+//         background-color: getVar('bg-100');
+//         color: getVar('text-100');
+//       注：此处要用主题属性的话，格式为 [属性名]: getVar('在$theme下存的值');//要放在@include useTheme{}里面喔！
+//     };
+// }

@@ -19,7 +19,10 @@
   "devDependencies": {
     "@types/node": "^20.12.3",
     "@vitejs/plugin-vue": "^5.0.4",
+    "node-sass": "^9.0.0",
     "sass": "^1.72.0",
+    "sass-loader": "^14.1.1",
+    "style-loader": "^3.3.4",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-icons": "^0.18.5",
