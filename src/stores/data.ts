@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import { defineStore } from "pinia";
 
 
-export const datastore = defineStore('tomato-data',()=>{
+export const datastore = defineStore('data',()=>{
     const data = reactive({
         
     });
@@ -11,5 +11,5 @@ export const datastore = defineStore('tomato-data',()=>{
         data,
     }
 },{
-    persist:false,
+    persist:false,// 是否选择持续化存储
 });
