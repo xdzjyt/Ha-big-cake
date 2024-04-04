@@ -1,47 +1,207 @@
 <script setup lang="ts">
-let dark = false;
+import LoginAndRegister from '@/components/LoginAndRegister.vue';
+import { useThemeStyleStore } from '@/stores/data';
 
-let modelBtn = () => {
-    dark = !dark;
-    if (dark){
-        window.document.documentElement.setAttribute("data-theme", 'dark');
-    }else {
-        window.document.documentElement.setAttribute("data-theme", 'light');
+const { themeStyle } = useThemeStyleStore();
+
+window.document.documentElement.setAttribute("data-theme", themeStyle.model);
+let themeModelBtn = () => {
+    themeStyle.btn_icon = (themeStyle.btn_icon == 'bxs-sun' ? 'bxs-moon' : 'bxs-sun');
+    themeStyle.model = (themeStyle.model == 'light' ? 'dark' : 'light');
+    if (themeStyle.model == 'dark') {
+        window.document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+        window.document.documentElement.setAttribute("data-theme", "light");
     }
 };
+// 主题色切换
+
+let nav_menu_list = [
+    { id: "1", title: "Home", icon: "bxs-home" },
+    { id: "2", title: "Products", icon: "bxs-package" },
+    { id: "3", title: "About", icon: "bxs-heart" },
+    { id: "4", title: "service", icon: "bxs-user-circle" },
+];
 </script>
 
 <template>
-    <div id="DarkModePage">
-        <div>
-            <h1 class="title">SImon</h1>
-            <div class="btn" @click="modelBtn">模式切换</div>
-        </div>
+    <div class="login-main">
+        <header>
+            <div class="logo">哈大饼</div>
+            <nav>
+                <ui class="menu">
+                    <li v-for="value in nav_menu_list" :key="value.id">
+                        <a href="#">
+                            <i class="bx" :class="value.icon"></i>
+                            <span>{{ value.title }}</span>
+                        </a>
+                    </li>
+                </ui>
+                <div class="btn"><i class='bx' :class="themeStyle.btn_icon" id="toggle" @click="themeModelBtn"></i>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="home">
+                <div class="home-content">
+                    <h1>"哈大饼"<br>外卖配送</h1>
+                    <p>美味外送<br>尽在指尖间<br>品尝哈大饼<br>畅享饕餮盛宴</p>
+                </div>
+            </section>
+            <section class="form-Area">
+                <div class="form-position-box">
+                    <LoginAndRegister />
+                </div>
+            </section>
+        </main>
     </div>
 </template>
 
-<style lang="scss" scoped>
-@import "../assets/scss/common.scss";
-#DarkModePage{
-    @include background_color("background_color");
-    @include font_color("font_color");
-    width: 100vw;
+<style lang="scss">
+@import '../assets/scss/common.scss';
+
+.login-main {
     height: 100vh;
+    @include background_color('bg-100');
+    min-width: 400px;
+    overflow: hidden;
+    transition: all .5s ease-in;
+}
+
+header {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    transition: background-color 1s,color 0.6s;
-    .title{
-        margin-bottom: 20px;
+    width: 100%;
+    height: 130px;
+    padding: 0 5%;
+    font-size: 18px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, .4);
+
+    @include font_color('text-100');
+    @include background_color('bg-300');
+    transition: all .5s ease-in;
+
+
+    .logo {
+        margin-right: auto;
+        font-size: 50px;
+        font-weight: 600;
+        user-select: none;
     }
-    .btn{
-        cursor: pointer;
+
+    nav {
+        display: flex;
+        align-items: center;
+
+        .menu {
+            display: flex;
+            align-items: center;
+
+            li a {
+                position: relative;
+                @include font_color('text-200');
+                font-size: 1.1rem;
+                font-weight: 500;
+                margin-left: 40px;
+
+                span {
+                    margin-left: 3px;
+                }
+            }
+
+            li a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -6px;
+                width: 100%;
+                height: 3px;
+                background: #fff;
+                border-radius: 5px;
+                transform-origin: right;
+                transform: scaleX(0);
+                transition: transform .5s;
+                font-size: 2em;
+            }
+
+            li a:hover::after {
+                transform-origin: left;
+                transform: scaleX(1);
+            }
+        }
+
+        #toggle {
+            border: 2px solid;
+            @include border_color('text-100');
+            box-shadow: 0 0 6px rgba(0, 0, 0, .9);
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 2rem;
+            margin-left: 150px;
+            cursor: pointer;
+            transition: transform .2s ease;
+            &:hover{
+                transform: scale(1.1);
+            }
+            &:active{
+                transform: scale(0.95);
+            }
+        }
+    }
+
+}
+
+main {
+    display: flex;
+    height: 100%;
+
+    .home {
+        padding: 0 5%;
+        @include font_color('text-200');
+        text-align: center;
+        width: 65%;
+        position: relative;
+
+        .home-content {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-40%);
+            display: flex;
+
+            h1 {
+                text-align: end;
+                white-space: nowrap;
+                font-size: 4.5rem;
+                font-weight: 600;
+                border-right: 10px solid;
+                @include border_color('text-100');
+                padding-right: 8px;
+                @include font_color('accent-100');
+            }
+
+            p {
+                text-align: start;
+                font-size: 1.1rem;
+                font-weight: 400;
+                line-height: 30px;
+                letter-spacing: 3px;
+                margin: auto 0;
+                padding-left: 8px;
+                @include font_color('text-200');
+            }
+        }
+    }
+
+    .form-Area {
+        width: 35%;
         display: flex;
         justify-content: center;
+        position: relative;
         align-items: center;
-        width: 100px;
-        height: 40px;
-        margin: 0;
+        padding-bottom: 10%;
     }
 }
 </style>
