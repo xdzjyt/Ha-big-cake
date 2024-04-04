@@ -3,16 +3,14 @@ import { defineStore } from "pinia";
 
 
 export const useThemeStyleStore = defineStore('theme',()=>{
-    const light_style = reactive({
-    });
-    const dark_style = reactive({
-        
+    const themeStyle = reactive({
+        model:'light',
+        btn_icon:'bxs-sun',
     });
 
     return {
-        light_style,
-        dark_style,
+        themeStyle,
     }
 },{
-    persist:false,// 是否选择持续化存储
+    persist:true,// 是否选择持续化存储
 });

@@ -21,6 +21,18 @@
 
 @mixin background_color($color){
     @include themeify{
-        background: themed($color) !important;
+        background-color: themed($color) !important;
+    }
+}
+
+@mixin border_color($color){
+    @include themeify{
+        border-color: themed($color) !important;
+    }
+}
+
+@mixin accent_color($color){
+    @include themeify{
+        accent-color: themed($color) !important;
     }
 }
