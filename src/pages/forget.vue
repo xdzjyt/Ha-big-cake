@@ -1,12 +1,26 @@
 <script setup lang="ts">
-import { ref ,onMounted} from 'vue';
-
-let isactive = ref(false);
+import { useThemeStyleStore} from '@/stores/data';
+import {onMounted} from 'vue'
+const { themeStyle } = useThemeStyleStore();
+window.document.documentElement.setAttribute("data-theme", themeStyle.model);
+let themeModelBtn = () => {
+    themeStyle.btn_icon = (themeStyle.btn_icon == 'bxs-sun' ? 'bxs-moon' : 'bxs-sun');
+    themeStyle.model = (themeStyle.model == 'light' ? 'dark' : 'light');
+    if (themeStyle.model == 'dark') {
+        window.document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+        window.document.documentElement.setAttribute("data-theme", "light");
+    }
+};
+// 主题色切换
+let nav_menu_list = [
+    { id: "1", title: "Home", icon: "bxs-home" },
+    { id: "2", title: "Products", icon: "bxs-package" },
+    { id: "3", title: "About", icon: "bxs-heart" },
+    { id: "4", title: "service", icon: "bxs-user-circle" },
+];
 let show_num: []
 let value :''
-const registerLink = () => {
-    isactive.value = !isactive.value;
-}
  onMounted(()=>
     {  show_num=[]
       draw(show_num)
@@ -19,7 +33,7 @@ const registerLink = () => {
               alert('提交成功！');
               dj()
           }else{
-              alert('验证码错误！\n你输入的是:  '+value+"\n正确的是:  "+num+'\n请重新输入！');
+              alert('验证码错误！\n你输入的是:  '+value+"\n正确的是:  "+num+'\n请重新输入!');
               dj()
           }
       }
@@ -101,74 +115,209 @@ const registerLink = () => {
           draw(show_num);   
       }
 </script>
-
 <template>
-    <div class="wrapper" :class="{ 'active': isactive }">
+    <div class="login-main">
+        <header>
+            <div class="logo">哈大饼</div>
+            <nav>
+                <ul class="menu">
+                    <li v-for="value in nav_menu_list" :key="value.id">
+                        <a href="#">
+                            <i class="bx" :class="value.icon"></i>
+                            <span>{{ value.title }}</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="btn"><i class='bx' :class="themeStyle.btn_icon" id="toggle" @click="themeModelBtn"></i>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <section class="home">
+                <div class="home-content">
+                    <h1>"哈大饼"<br>外卖配送</h1>
+                    <p>美味外送<br>尽在指尖间<br>品尝哈大饼<br>畅享饕餮盛宴</p>
+                </div>
+            </section>
+            <section class="form-Area">
+                <div class="wrapper">
         <div class="form-box login">
-            <h2>登录</h2>
             <form action="#">
                 <div class="input-box">
                     <i class='bx bxs-envelope'></i>
                     <input type="email" required>
-                    <label>邮箱</label>
+                    <label>申诉邮箱</label>
                 </div>
                 <div class="input-box">
                     <i class='bx bxs-lock-alt'></i>
                     <input type="password" required>
-                    <label>密码</label>
+                    <label>新密码</label>
+                </div><div class="input-box">
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" required>
+                    <label>确认新密码</label>
                 </div>
                 <div class="input-box1">
                     <input type="text" required>
-                    <input type="button" id="code" onclick="change" >
+                    <input type="button" id="code1" onclick="change" >
                     <canvas id="canvas" width="100" height="43" @click="dj" style="border: 1px solid #ccc"></canvas>
                     <label>验证码</label>
                 </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox">记住密码</label>
-                    <RouterLink to="/forget" >忘记密码</RouterLink>
-                </div>
-                <button type="submit" class="btn" @click="sublim">登录</button>
-                <div class="login-register">
-                    <p ><RouterLink to="phone">电话验证登录</RouterLink></p>
-                    <span ><a href="#" @click="registerLink">注册</a></span>
-                </div>
-            </form>
-        </div>
-
-        <div class="form-box register">
-            <h2>注册</h2>
-            <form action="#">
-                <div class="input-box">
-                    <i class='bx bxs-user'></i>
-                    <input type="text" required>
-                    <label>用户名</label>
-                </div>
-                <div class="input-box">
-                    <i class='bx bxs-envelope'></i>
-                    <input type="email" required>
-                    <label>邮箱</label>
-                </div>
-                <div class="input-box">
-                    <i class='bx bxs-lock-alt'></i>
-                    <input type="password" required>
-                    <label>密码</label>
-                </div>
-
-                <div class="remember-forgot">
-                    <label><input type="checkbox">同意相关条款</label>
-                </div>
-                <button type="submit" class="btn">注册</button>
-                <div class="login-register">
-                    <p>已经拥有账户?<a href="#" class="login-link" @click="registerLink">去登陆</a></p>
-                </div>
+                <button type="submit" class="btn" @click="sublim">重置密码</button>
             </form>
         </div>
     </div>
+            </section>
+        </main>
+    </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '../assets/scss/common.scss';
 
+.login-main {
+    height: 100vh;
+    @include background_color('bg-100');
+    min-width: 400px;
+    overflow: hidden;
+    transition: all .5s ease-in;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 130px;
+    padding: 0 5%;
+    font-size: 18px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, .4);
+
+    @include font_color('text-100');
+    @include background_color('bg-300');
+    transition: all .5s ease-in;
+
+
+    .logo {
+        margin-right: auto;
+        font-size: 50px;
+        font-weight: 600;
+        user-select: none;
+    }
+
+    nav {
+        display: flex;
+        align-items: center;
+
+        .menu {
+            display: flex;
+            align-items: center;
+
+            li a {
+                position: relative;
+                @include font_color('text-200');
+                font-size: 1.1rem;
+                font-weight: 500;
+                margin-left: 40px;
+
+                span {
+                    margin-left: 3px;
+                }
+            }
+
+            li a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -6px;
+                width: 100%;
+                height: 3px;
+                background: #fff;
+                border-radius: 5px;
+                transform-origin: right;
+                transform: scaleX(0);
+                transition: transform .5s;
+                font-size: 2em;
+            }
+
+            li a:hover::after {
+                transform-origin: left;
+                transform: scaleX(1);
+            }
+        }
+
+        #toggle {
+            border: 2px solid;
+            @include border_color('text-100');
+            box-shadow: 0 0 6px rgba(0, 0, 0, .9);
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 2rem;
+            margin-left: 150px;
+            cursor: pointer;
+            transition: transform .2s ease;
+            &:hover{
+                transform: scale(1.1);
+            }
+            &:active{
+                transform: scale(0.95);
+            }
+        }
+    }
+
+}
+
+main {
+    display: flex;
+    height: 100%;
+
+    .home {
+        padding: 0 5%;
+        @include font_color('text-200');
+        text-align: center;
+        width: 65%;
+        position: relative;
+
+        .home-content {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-40%);
+            display: flex;
+
+            h1 {
+                text-align: end;
+                white-space: nowrap;
+                font-size: 4.5rem;
+                font-weight: 600;
+                border-right: 10px solid;
+                @include border_color('text-100');
+                padding-right: 8px;
+                @include font_color('accent-100');
+            }
+
+            p {
+                text-align: start;
+                font-size: 1.1rem;
+                font-weight: 400;
+                line-height: 30px;
+                letter-spacing: 3px;
+                margin: auto 0;
+                padding-left: 8px;
+                @include font_color('text-200');
+            }
+        }
+    }
+
+    .form-Area {
+        width: 35%;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        align-items: center;
+        padding-bottom: 10%;
+    }
+}
 .wrapper {
     position: relative;
     width: 400px;
@@ -372,15 +521,8 @@ const registerLink = () => {
             text-align: center;
             font-weight: 500;
             margin: 25px 0 10px;
-            p{
-                display: inline;
-                float: left;
-            }
-            span{
-                display: inline;
-                float: right;
-            }
-            p,span a {
+
+            p a {
                 @include font_color('text-100');
                 font-weight: 600;
                 margin-left: 5px;

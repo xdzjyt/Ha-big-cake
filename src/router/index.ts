@@ -1,19 +1,27 @@
 import { createRouter,createWebHistory } from "vue-router";
-
-const routes = [
-    {
-        path:'/',
-        component:()=>import("@/views/LoginView.vue"),
-    },
-    {
-        path:'/home',
-        component:()=>import("@/views/HomeView.vue"),
-    },
-];
-
+import forget from "@/pages/forget.vue";
+import LoginView from "@/pages/LoginView.vue";
+import phone from "@/pages/phone.vue";
 const router = createRouter({
     history:createWebHistory(),
-    routes,
+    routes :[
+        {
+            path:'/',
+            component: LoginView
+        },
+        {
+            path:'/home',
+            component:()=>import("@/pages/HomeView.vue")
+        },
+        {
+            path :'/forget',
+            component :forget
+        },
+        {
+            path :'/phone',
+            component :phone
+        }
+    ],
 });
 
 export default router;

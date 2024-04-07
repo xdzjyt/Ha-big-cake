@@ -29,14 +29,14 @@ let nav_menu_list = [
         <header>
             <div class="logo">哈大饼</div>
             <nav>
-                <ui class="menu">
+                <ul class="menu">
                     <li v-for="value in nav_menu_list" :key="value.id">
                         <a href="#">
                             <i class="bx" :class="value.icon"></i>
                             <span>{{ value.title }}</span>
                         </a>
                     </li>
-                </ui>
+                </ul>
                 <div class="btn"><i class='bx' :class="themeStyle.btn_icon" id="toggle" @click="themeModelBtn"></i>
                 </div>
             </nav>
@@ -50,9 +50,7 @@ let nav_menu_list = [
                 </div>
             </section>
             <section class="form-Area">
-                <div class="form-position-box">
-                    <LoginAndRegister />
-                </div>
+                <LoginAndRegister />
             </section>
         </main>
     </div>
