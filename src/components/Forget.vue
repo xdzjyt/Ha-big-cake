@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-
-let isactive = ref(false);
-let show_num: []
-let value: ''
-const registerLink = () => {
-    isactive.value = !isactive.value;
-}
+import { onMounted } from 'vue';
+let show_num: [];
+let value: '';
 onMounted(() => {
     show_num = []
     draw(show_num)
 }
-)
+);
 function sublim() {
     var num = show_num.join("");
     if (!value) return alert('请输入验证码！');
@@ -103,19 +98,24 @@ function dj() {
 </script>
 
 <template>
-    <div class="wrapper" :class="{ 'active': isactive }">
+    <div class="wrapper">
         <div class="form-box login">
-            <h2>登录</h2>
+            <h2>重置密码</h2>
             <form action="#">
                 <div class="input-box">
                     <i class='bx bxs-envelope'></i>
                     <input type="email" required>
-                    <label>邮箱</label>
+                    <label>申诉邮箱</label>
                 </div>
                 <div class="input-box">
                     <i class='bx bxs-lock-alt'></i>
                     <input type="password" required>
-                    <label>密码</label>
+                    <label>新密码</label>
+                </div>
+                <div class="input-box">
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" required>
+                    <label>确认新密码</label>
                 </div>
                 <div class="input-box code">
                     <input type="text" required>
@@ -124,52 +124,16 @@ function dj() {
                     </button>
                     <label>验证码</label>
                 </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox">记住密码</label>
-                    <RouterLink to="/forget">忘记密码</RouterLink>
-                </div>
-                <button type="submit" class="btn" @click="sublim">登录</button>
-                <div class="login-register">
-                    <p>
-                        <RouterLink to="phone">电话验证登录</RouterLink>
-                    </p>
-                    <span>还没有一个账户？<a href="#" @click="registerLink">注册</a></span>
-                </div>
-            </form>
-        </div>
-
-        <div class="form-box register">
-            <h2>注册</h2>
-            <form action="#">
-                <div class="input-box">
-                    <i class='bx bxs-user'></i>
-                    <input type="text" required>
-                    <label>用户名</label>
-                </div>
-                <div class="input-box">
-                    <i class='bx bxs-envelope'></i>
-                    <input type="email" required>
-                    <label>邮箱</label>
-                </div>
-                <div class="input-box">
-                    <i class='bx bxs-lock-alt'></i>
-                    <input type="password" required>
-                    <label>密码</label>
-                </div>
-
-                <div class="remember-forgot">
-                    <label><input type="checkbox">同意相关条款</label>
-                </div>
-                <button type="submit" class="btn">注册</button>
-                <div class="login-register">
-                    <p>已经拥有账户?<a href="#" class="login-link" @click="registerLink">去登陆</a></p>
+                <button type="submit" class="btn" @click="sublim">重置密码</button>
+                <div class="returnLogin">
+                    <p>已找回密码?<RouterLink class="login-link" to="/">去登陆</RouterLink></p>
                 </div>
             </form>
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '../assets/scss/common.scss';
 
 .wrapper {
@@ -269,7 +233,6 @@ function dj() {
                 font-size: 1.2em;
                 line-height: 57px;
             }
-
             &.code {
                 display: flex;
                 position: relative;
@@ -280,31 +243,6 @@ function dj() {
                     border: none;
                     user-select: none;
                     cursor: pointer;
-                }
-            }
-        }
-
-        .remember-forgot {
-            font-size: .9em;
-            @include font_color('text-100');
-            font-weight: 500;
-            display: flex;
-            margin: -15px 0 15px;
-            justify-content: space-between;
-            align-items: center;
-
-            label input {
-                @include accent-color('text-100');
-                margin-right: 3px;
-            }
-
-            a {
-                @include font_color('text-100');
-                font-weight: 600;
-                transition: all .5s;
-
-                &:hover {
-                    text-decoration: underline;
                 }
             }
         }
@@ -331,35 +269,20 @@ function dj() {
             }
         }
 
-        .login-register {
+        .returnLogin {
             font-size: .9em;
             @include font_color('text-100');
             text-align: center;
             font-weight: 500;
             margin: 25px 0 10px;
 
-            p {
-                display: inline;
-                float: left;
-            }
+            p a {
+                @include font_color('text-100');
+                font-weight: 600;
+                margin-left: 5px;
 
-            span {
-                display: inline;
-                float: right;
-            }
-
-            p,
-            span {
-                user-select: none;
-                font-weight: 520;
-                a {
-                    @include font_color('text-100');
-                    font-weight: 600;
-                    margin-left: 5px;
-
-                    &:hover {
-                        text-decoration: underline;
-                    }
+                &:hover {
+                    text-decoration: underline;
                 }
             }
         }

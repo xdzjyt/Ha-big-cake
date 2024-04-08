@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import LoginAndRegister from '@/components/LoginAndRegister.vue';
 import { useThemeStyleStore } from '@/stores/data';
 
 const { themeStyle } = useThemeStyleStore();
@@ -25,7 +24,7 @@ let nav_menu_list = [
 </script>
 
 <template>
-    <div class="login-main">
+    <div class="login-main" :class=themeStyle.model>
         <header>
             <div class="logo">哈大饼</div>
             <nav>
@@ -50,7 +49,7 @@ let nav_menu_list = [
                 </div>
             </section>
             <section class="form-Area">
-                <LoginAndRegister />
+                <RouterView />
             </section>
         </main>
     </div>
@@ -168,6 +167,7 @@ main {
             left: 50%;
             transform: translateX(-40%);
             display: flex;
+            user-select: none;
 
             h1 {
                 text-align: end;
@@ -178,6 +178,7 @@ main {
                 @include border_color('text-100');
                 padding-right: 8px;
                 @include font_color('accent-100');
+                -webkit-text-stroke: 1px #fff;
             }
 
             p {
