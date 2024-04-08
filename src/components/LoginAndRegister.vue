@@ -170,7 +170,6 @@ function dj() {
 </template>
 
 <style scoped lang="scss">
-@import '../assets/scss/common.scss';
 
 .wrapper {
     position: relative;

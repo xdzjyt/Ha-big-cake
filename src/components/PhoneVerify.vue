@@ -73,7 +73,6 @@ const login = () => {
 </template>
 
 <style lang="scss">
-@import '../assets/scss/common.scss';
 
 .wrapper {
     position: relative;
@@ -181,11 +180,13 @@ const login = () => {
                 #send-btn {
                     outline: none;
                     background-color: transparent;
+                    // @include background_color('bg-200');
                     border: none;
                     user-select: none;
                     cursor: pointer;
                     width: 150px;
-                    box-shadow: inset 0 0 10px rgba(0, 0, 0,1);
+                    box-shadow: inset 5px 5px 5px rgba(0, 0, 0,.7),
+                                        0 0 3px rgba(0, 0, 0, 1);
                     border-radius: 8px;
                     @include font_color('text-100');
                     transition: transform 0.2s ease;
