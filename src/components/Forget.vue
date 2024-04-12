@@ -134,7 +134,6 @@ function dj() {
 </template>
 
 <style lang="scss">
-@import '../assets/scss/common.scss';
 
 .wrapper {
     position: relative;
