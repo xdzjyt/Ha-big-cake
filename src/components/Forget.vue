@@ -23,7 +23,7 @@ function charList(length: any, code: any) {
     // charCodeAt: 获得自负unicode编码;
     return new Array(length)
         .fill(null)
-        .map((i) => String.fromCharCode(code.charCodeAt() + i));  // 获取’a’的charCode: "a".charCodeAt(0)=97
+        .map((c,i) => String.fromCharCode(code.charCodeAt() + i));  // 获取’a’的charCode: "a".charCodeAt(0)=97
 }
 // 获得图形验证码集合
 function getCode() {
@@ -43,6 +43,7 @@ function draw(show_num: any, codeLength = 4) { // codeLength: 设置验证码长
     let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
     let canvas_width = canvas!.width;
     let canvas_height = canvas!.height;
+    
     context.clearRect(0, 0, canvas_width, canvas_height);
 
     var aCode = getCode(); // 验证码所有字符数组
@@ -119,9 +120,8 @@ function dj() {
                 </div>
                 <div class="input-box code">
                     <input type="text" required>
-                    <button id="code-btn" onclick="change">
+                    <input type="text" v-model="value"  required>
                         <canvas id="canvas" width="100" height="43" @click="dj" style="border: 2px solid #ccc"></canvas>
-                    </button>
                     <label>验证码</label>
                 </div>
                 <button type="submit" class="btn" @click="sublim">重置密码</button>

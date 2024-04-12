@@ -13,7 +13,7 @@ onMounted(() => {
 }
 )
 function sublim() {
-    var num = show_num.join("");
+    let num = show_num.join("");
     if (!value) return alert('请输入验证码！');
     if (value == num) {
         alert('提交成功！');
@@ -28,7 +28,7 @@ function charList(length: any, code: any) {
     // charCodeAt: 获得自负unicode编码;
     return new Array(length)
         .fill(null)
-        .map((i) => String.fromCharCode(code.charCodeAt() + i));  // 获取’a’的charCode: "a".charCodeAt(0)=97
+        .map((v,i) => String.fromCharCode(code.charCodeAt() + i));  // 获取’a’的charCode: "a".charCodeAt(0)=97
 }
 // 获得图形验证码集合
 function getCode() {
@@ -118,10 +118,8 @@ function dj() {
                     <label>密码</label>
                 </div>
                 <div class="input-box code">
-                    <input type="text" required>
-                    <button id="code-btn" onclick="change">
+                    <input type="text" v-model="value"  required>
                         <canvas id="canvas" width="100" height="43" @click="dj" style="border: 2px solid #ccc"></canvas>
-                    </button>
                     <label>验证码</label>
                 </div>
                 <div class="remember-forgot">
