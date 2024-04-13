@@ -48,6 +48,7 @@ function draw(show_num: any, codeLength = 4) { // codeLength: 设置验证码长
     let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
     let canvas_width = canvas!.width;
     let canvas_height = canvas!.height;
+    
     context.clearRect(0, 0, canvas_width, canvas_height);
 
     var aCode = getCode(); // 验证码所有字符数组
@@ -179,7 +180,6 @@ function dj() {
     backdrop-filter: blur(20px);
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     display: flex;
-    transition: transform .5s ease, height .2s ease;
     justify-content: center;
     align-items: center;
     overflow: hidden;

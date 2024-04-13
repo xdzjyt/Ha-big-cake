@@ -53,7 +53,7 @@ const login = () => {
                 <h2>电话验证登录</h2>
                 <div class="input-box">
                     <i class='bx bxs-phone-call'></i>
-                    <input type="tel" required>
+                    <input type="tel" v-model="phone" required>
                     <label>绑定的电话号码</label>
                 </div>
                 <div class="input-box send">
