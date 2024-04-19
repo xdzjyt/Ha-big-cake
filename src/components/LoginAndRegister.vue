@@ -10,7 +10,7 @@ const registerLink = () => {
 let show_num = [];
 let value = '';
 function sublim() {
-    var num = show_num.join("");
+    let num = show_num.join("");
     if (!value) return alert('请输入验证码！');
     if (value == num) {
         alert('提交成功！');
@@ -306,7 +306,6 @@ const closeVerify = (index:number) => {
     backdrop-filter: blur(20px);
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     display: flex;
-    transition: transform .5s ease, height .2s ease;
     justify-content: center;
     align-items: center;
     overflow: hidden;
