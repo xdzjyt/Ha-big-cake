@@ -1,34 +1,35 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,reactive } from 'vue';
 
 let isactive = ref(false);
-let show_num: []
-let value: ''
 const registerLink = () => {
     isactive.value = !isactive.value;
-}
-onMounted(() => {
-    show_num = []
-    draw(show_num)
-}
-)
+};
+
+//验证码
+let show_num = [];
+let value = '';
 function sublim() {
     var num = show_num.join("");
     if (!value) return alert('请输入验证码！');
     if (value == num) {
         alert('提交成功！');
-        dj()
+        dj();
     } else {
         alert('验证码错误！\n你输入的是:  ' + value + "\n正确的是:  " + num + '\n请重新输入！');
-        dj()
+        dj();
     }
-}
-function charList(length: any, code: any) {
+};
+function charList(length = 26, code = 'a') {
     // fromCharCode: 将Unicode编码转为一个字符:
     // charCodeAt: 获得自负unicode编码;
+    let i = -1;
     return new Array(length)
         .fill(null)
-        .map((i) => String.fromCharCode(code.charCodeAt() + i));  // 获取’a’的charCode: "a".charCodeAt(0)=97
+        .map((num) => {
+            i++;
+            return String.fromCharCode(code.charCodeAt(0) + i);
+        });  // 获取’a’的charCode: "a".charCodeAt(0)=97
 }
 // 获得图形验证码集合
 function getCode() {
@@ -43,11 +44,11 @@ function getCode() {
 
     return [...lowercaseAlphabet, ...uppercaseAlphabet, ...numsZeroToNine]
 }
-function draw(show_num: any, codeLength = 4) { // codeLength: 设置验证码长度
+function draw(show_num, codeLength = 4) { // codeLength: 设置验证码长度
     let canvas = document.getElementById("canvas");//获取到canvas的对象，演员
-    let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
-    let canvas_width = canvas!.width;
-    let canvas_height = canvas!.height;
+    let context = canvas.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
+    let canvas_width = canvas.width;
+    let canvas_height = canvas.height;
     context.clearRect(0, 0, canvas_width, canvas_height);
 
     var aCode = getCode(); // 验证码所有字符数组
@@ -97,9 +98,106 @@ function randomColor() {
     return "rgb(" + r + "," + g + "," + b + ")";
 }
 function dj() {
-    value = ''
     draw(show_num);
 }
+onMounted(() => {
+    show_num = [];
+    draw(show_num);
+}
+);
+
+//表单验证
+
+//确定正则判断
+const lower = new RegExp('(?=.*[a-z])')
+const upper = new RegExp('(?=.*[A-Z])')
+const number = new RegExp('(?=.*[0-9])')
+const special = new RegExp('(?=.*[!@#\$%\^&\*/?])')
+const length = new RegExp('(?=.{8,})')
+
+
+let password = ref('');
+let repassword = ref('');
+let valid = reactive([
+    { id: '1', show: false, text: '至少有一个小写字母' },
+    { id: '2', show: false, text: '至少有一个大写字母' },
+    { id: '3', show: false, text: '至少有一个数字' },
+    { id: '4', show: false, text: '至少有一个特殊字符' },
+    { id: '5', show: false, text: '至少有8个字符' },
+]);//验证框里的确认
+let valid_re = reactive([
+    { id: '1', show: false, text: '两次输入密码不一致' },
+])
+let verifyValid = reactive([
+    { show: false, valid: false },
+    { show: false, valid: false },
+    { show: false, valid: false },
+    { show: false, valid: false },
+]);//每行的验证框和最终通过图标的显示
+const checkPassword = () => {
+    //小写字母判断
+    if (lower.test(password.value)) {
+        valid[0]['show'] = true;
+    } else {
+        valid[0]['show'] = false;
+    }
+
+    //大写字母判断 
+    if (upper.test(password.value)) {
+        valid[1]['show'] = true;
+    } else {
+        valid[1]['show'] = false;
+    }
+
+    //数字判断
+    if (number.test(password.value)) {
+        valid[2]['show'] = true;
+    } else {
+        valid[2]['show'] = false;
+    }
+
+    //特殊字符判断
+    if (special.test(password.value)) {
+        valid[3]['show'] = true;
+    } else {
+        valid[3]['show'] = false;
+    }
+
+    //长度判断
+    if (length.test(password.value)) {
+        valid[4]['show'] = true;
+    } else {
+        valid[4]['show'] = false;
+    }
+    let flag = 0;
+    for (let i = 0; i < valid.length; ++i) {
+        if (valid[i]['show'] === true) flag++;
+    }
+    if (flag === valid.length) {
+        verifyValid[2]['valid'] = true;
+    } else {
+        verifyValid[2]['valid'] = false;
+    }
+};//密码验证
+const recheckPassword = () => {
+    if (repassword.value === '') {
+        valid_re[0]['show'] = false;
+        verifyValid[3]['valid'] = false;
+    }
+    else if (repassword.value === password.value) {
+        valid_re[0]['show'] = true;
+        verifyValid[3]['valid'] = true;
+    } else {
+        valid_re[0]['show'] = false;
+        verifyValid[3]['valid'] = false;
+    }
+};//再次确认
+const openVerify = (index:number) => {
+    if (!verifyValid[index]['valid']) verifyValid[index]['show'] = true;
+};
+const closeVerify = (index:number) => {
+    verifyValid[index]['show'] = false;
+};
 </script>
 
 <template>
@@ -109,7 +207,7 @@ function dj() {
             <form action="#">
                 <div class="input-box">
                     <i class='bx bxs-envelope'></i>
-                    <input type="email" required>
+                    <input type="text" required>
                     <label>邮箱</label>
                 </div>
                 <div class="input-box">
@@ -118,20 +216,20 @@ function dj() {
                     <label>密码</label>
                 </div>
                 <div class="input-box code">
-                    <input type="text" required>
-                    <button id="code-btn" onclick="change">
-                        <canvas id="canvas" width="100" height="43" @click="dj" style="border: 2px solid #ccc"></canvas>
-                    </button>
+                    <input type="text" required v-model=value maxlength="4">
+                    <div id="code-btn" onclick="">
+                        <canvas id="canvas" @click="dj"></canvas>
+                    </div>
                     <label>验证码</label>
                 </div>
                 <div class="remember-forgot">
                     <label><input type="checkbox">记住密码</label>
                     <RouterLink to="/forget">忘记密码</RouterLink>
                 </div>
-                <button type="submit" class="btn" @click="sublim">登录</button>
+                <button type="submit" class="btn" @click="sublim">LOGIN</button>
                 <div class="login-register">
                     <p>
-                        <RouterLink to="phone">电话验证登录</RouterLink>
+                        <RouterLink to="/phone">电话验证登录</RouterLink>
                     </p>
                     <span>还没有一个账户？<a href="#" @click="registerLink">注册</a></span>
                 </div>
@@ -148,28 +246,55 @@ function dj() {
                 </div>
                 <div class="input-box">
                     <i class='bx bxs-envelope'></i>
-                    <input type="email" required>
+                    <input type="text" required>
                     <label>邮箱</label>
                 </div>
                 <div class="input-box">
+                    <i class="bx" :class="{ 'bxs-check-circle': verifyValid[2]['valid'] }" id="ac"></i>
                     <i class='bx bxs-lock-alt'></i>
-                    <input type="password" required>
+                    <input type="password" required v-model="password" @keyup="checkPassword" @focus="openVerify(2)"
+                        @blur="closeVerify(2)">
                     <label>密码</label>
+                    <div class="validation" :class="{ 'valid': verifyValid[2]['show'] }">
+                        <ul>
+                            <li v-for="item in valid" :class="{ 'valid': item.show }" :key="item.id">
+                                <i class='bx'
+                                    :class="{ 'bxs-x-circle': !item.show, 'bxs-check-circle': item.show }"></i>
+                                <span>{{ item.text }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <i class="bx" :class="{ 'bxs-check-circle': verifyValid[3]['valid'] }" id="ac"></i>
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" required @focus="openVerify(3)" @blur="closeVerify(3)"
+                        @keyup="recheckPassword" v-model="repassword">
+                    <label>再次输入密码</label>
+                    <div class="validation" :class="{ 'valid': verifyValid[3]['show'] }">
+                        <ul>
+                            <li v-for="item in valid_re" :class="{ 'valid': item.show }" :key="item.id">
+                                <i class='bx'
+                                    :class="{ 'bxs-x-circle': !item.show, 'bxs-check-circle': item.show }"></i>
+                                <span>{{ item.text }}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="remember-forgot">
                     <label><input type="checkbox">同意相关条款</label>
                 </div>
-                <button type="submit" class="btn">注册</button>
+                <button type="submit" class="btn">sign up</button>
                 <div class="login-register">
-                    <p>已经拥有账户?<a href="#" class="login-link" @click="registerLink">去登陆</a></p>
+                    <span>已经拥有账户?<a href="#" class="login-link" @click="registerLink">去登陆</a></span>
                 </div>
             </form>
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 
 .wrapper {
     position: relative;
@@ -187,7 +312,7 @@ function dj() {
     overflow: hidden;
 
     &.active {
-
+        height: 570px;
         .form-box {
             &.login {
                 transition: none;
@@ -220,6 +345,7 @@ function dj() {
             font-size: 2em;
             @include font_color('text-100');
             text-align: center;
+            user-select: none;
         }
 
         .input-box {
@@ -268,20 +394,93 @@ function dj() {
                 font-size: 1.2em;
                 line-height: 57px;
             }
+            #ac {
+                position: absolute;
+                right: -20px;
+                font-size: 1.2em;
+                line-height: 57px;
+                color: rgb(40, 207, 40)!important;
+            }
 
             &.code {
                 display: flex;
                 position: relative;
+                border: none;
+
+                input {
+                    border-bottom: 2px solid;
+                    @include border_color('text-100');
+                    width: 65%;
+                }
 
                 #code-btn {
+                    width: 35%;
+                    padding: 0;
                     outline: none;
                     background-color: transparent;
-                    border: none;
+                    border: 2px solid;
+                    @include border_color('text-100');
                     user-select: none;
+                    overflow: hidden;
                     cursor: pointer;
                 }
             }
+            .validation {
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                margin-top: 5px;
+                opacity: 0;
+                visibility: hidden;
+                z-index: 99;
+                @include background_color('bg-300');
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+                transition: all 0.4s ease-in-out;
+
+                &.valid {
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                ul {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    li {
+
+                        list-style: none;
+                        @include font_color('text-100');
+                        font-size: 1.1rem;
+                        font-weight: 500;
+                        transition: 0.5s;
+                        display: flex;
+                        flex-wrap: nowrap;
+
+                        i {
+                            position: static;
+                            font-size: inherit;
+                            line-height: inherit;
+                            margin-right: 5px;
+                            @include font_color('text-100');
+                        }
+
+                        &.valid {
+                            @include font_color('primary-300');
+
+                            i {
+                                @include font_color('primary-300');
+                            }
+                        }
+                    }
+                }
+
+            }
         }
+
 
         .remember-forgot {
             font-size: .9em;

@@ -49,15 +49,33 @@ let nav_menu_list = [
                 </div>
             </section>
             <section class="form-Area">
-                <RouterView />
+                <transition name="fade" mode="out-in">
+                    <RouterView />
+                </transition>
             </section>
         </main>
     </div>
 </template>
 
-<style lang="scss">
-@import '../assets/scss/common.scss';
+<style lang="scss" scoped>
+// @import '../assets/scss/common.scss';
+.fade-enter-active,
+.fade-leave-active {
+     transition: opacity 1s;
+    // transition: height 1s;
+}
 
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}//路由跳转动画
+
+//
 .login-main {
     height: 100vh;
     @include background_color('bg-100');
@@ -139,10 +157,12 @@ header {
             margin-left: 150px;
             cursor: pointer;
             transition: transform .2s ease;
-            &:hover{
+
+            &:hover {
                 transform: scale(1.1);
             }
-            &:active{
+
+            &:active {
                 transform: scale(0.95);
             }
         }
@@ -190,6 +210,7 @@ main {
                 margin: auto 0;
                 padding-left: 8px;
                 @include font_color('text-200');
+                white-space: nowrap;
             }
         }
     }

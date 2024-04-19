@@ -53,14 +53,15 @@ const login = () => {
                 <h2>电话验证登录</h2>
                 <div class="input-box">
                     <i class='bx bxs-phone-call'></i>
-                    <input type="tel" required>
+                    <input type="text" v-model="phone" required>
                     <label>绑定的电话号码</label>
                 </div>
                 <div class="input-box send">
                     <input type="text" v-model="verificationCode" required>
                     <label>验证码</label>
-                    <button id="send-btn" @click="sendVerificationCode" :disabled="countDown > 0">{{ countDown > 0 ?
-                        `${countDown}秒后重新发送` : '发送验证码' }}</button>
+                    <div id="send-btn" @click="sendVerificationCode" :disabled="countDown > 0">
+                        <span> {{ countDown > 0 ? `${countDown}秒后重新发送` : '发送验证码' }} </span>
+                    </div>
                 </div>
                 <button type="submit" class="btn" @click="login">登录</button>
                 <div class="returnLogin">
@@ -73,7 +74,6 @@ const login = () => {
 </template>
 
 <style lang="scss">
-
 .wrapper {
     position: relative;
     width: 400px;
@@ -175,26 +175,39 @@ const login = () => {
             &.send {
                 display: flex;
                 position: relative;
-                padding-bottom: 5px;
+                border: none;
+                justify-content: space-between;
+
+                input {
+                    border-bottom: 2px solid;
+                    @include border_color('text-100');
+                    width: 50%;
+                }
 
                 #send-btn {
+                    width: 35%;
+                    padding: 5px;
                     outline: none;
                     background-color: transparent;
-                    // @include background_color('bg-200');
-                    border: none;
+                    border: 2px solid;
+                    @include border_color('text-100');
                     user-select: none;
                     cursor: pointer;
-                    width: 150px;
-                    box-shadow: inset 5px 5px 5px rgba(0, 0, 0,.7),
-                                        0 0 3px rgba(0, 0, 0, 1);
+                    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, .7),
+                        0 0 3px rgba(0, 0, 0, 1);
                     border-radius: 8px;
                     @include font_color('text-100');
                     transition: transform 0.2s ease;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 600;
 
-                    &:hover{
+                    &:hover {
                         transform: scale(1.02);
                     }
-                    &:active{
+
+                    &:active {
                         transform: scale(0.98);
                     }
                 }
