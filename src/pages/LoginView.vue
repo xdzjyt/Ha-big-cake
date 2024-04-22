@@ -16,10 +16,10 @@ let themeModelBtn = () => {
 // 主题色切换
 
 let nav_menu_list = [
-    { id: "1", title: "Home", icon: "bxs-home" },
-    { id: "2", title: "Products", icon: "bxs-package" },
-    { id: "3", title: "About", icon: "bxs-heart" },
-    { id: "4", title: "service", icon: "bxs-user-circle" },
+    { id: "1", title: "Home", icon: "bxs-home",url:'/home' },
+    { id: "2", title: "Products", icon: "bxs-package",url:'/' },
+    { id: "3", title: "About", icon: "bxs-heart",url:'/' },
+    { id: "4", title: "service", icon: "bxs-user-circle",url:'/' },
 ];
 </script>
 
@@ -30,10 +30,10 @@ let nav_menu_list = [
             <nav>
                 <ul class="menu">
                     <li v-for="value in nav_menu_list" :key="value.id">
-                        <a href="#">
+                        <RouterLink :to="value.url">
                             <i class="bx" :class="value.icon"></i>
                             <span>{{ value.title }}</span>
-                        </a>
+                        </RouterLink>
                     </li>
                 </ul>
                 <div class="btn"><i class='bx' :class="themeStyle.btn_icon" id="toggle" @click="themeModelBtn"></i>

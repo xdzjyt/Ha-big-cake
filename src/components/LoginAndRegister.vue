@@ -7,17 +7,17 @@ const registerLink = () => {
 };
 
 //验证码
-let show_num = [];
+let show_num:number[]|number[] = [];
 let value = '';
-function sublim() {
+function sublim(length:number = 6) {
     let num = show_num.join("");
     if (!value) return alert('请输入验证码！');
     if (value == num) {
         alert('提交成功！');
-        dj();
+        dj(length);
     } else {
         alert('验证码错误！\n你输入的是:  ' + value + "\n正确的是:  " + num + '\n请重新输入！');
-        dj();
+        dj(length);
     }
 };
 function charList(length = 26, code = 'a') {
@@ -26,7 +26,7 @@ function charList(length = 26, code = 'a') {
     let i = -1;
     return new Array(length)
         .fill(null)
-        .map((num) => {
+        .map(() => {
             i++;
             return String.fromCharCode(code.charCodeAt(0) + i);
         });  // 获取’a’的charCode: "a".charCodeAt(0)=97
@@ -44,11 +44,11 @@ function getCode() {
 
     return [...lowercaseAlphabet, ...uppercaseAlphabet, ...numsZeroToNine]
 }
-function draw(show_num, codeLength = 4) { // codeLength: 设置验证码长度
+function draw(show_num:string[]|number[], codeLength = 6) { // codeLength: 设置验证码长度
     let canvas = document.getElementById("canvas");//获取到canvas的对象，演员
-    let context = canvas.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
-    let canvas_width = canvas.width;
-    let canvas_height = canvas.height;
+    let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
+    let canvas_width = canvas!.width;
+    let canvas_height = canvas!.height;
     context.clearRect(0, 0, canvas_width, canvas_height);
 
     var aCode = getCode(); // 验证码所有字符数组
@@ -97,12 +97,12 @@ function randomColor() {
     var b = Math.floor(Math.random() * 256);
     return "rgb(" + r + "," + g + "," + b + ")";
 }
-function dj() {
-    draw(show_num);
+function dj(length:number = 6) {
+    draw(show_num,length);
 }
 onMounted(() => {
     show_num = [];
-    draw(show_num);
+    draw(show_num,6);
 }
 );
 
@@ -216,9 +216,9 @@ const closeVerify = (index:number) => {
                     <label>密码</label>
                 </div>
                 <div class="input-box code">
-                    <input type="text" required v-model=value maxlength="4">
+                    <input type="text" required v-model=value maxlength="6">
                     <div id="code-btn" onclick="">
-                        <canvas id="canvas" @click="dj"></canvas>
+                        <canvas id="canvas" @click="dj(6)"></canvas>
                     </div>
                     <label>验证码</label>
                 </div>
@@ -226,7 +226,7 @@ const closeVerify = (index:number) => {
                     <label><input type="checkbox">记住密码</label>
                     <RouterLink to="/forget">忘记密码</RouterLink>
                 </div>
-                <button type="submit" class="btn" @click="sublim">LOGIN</button>
+                <button type="submit" class="btn" @click="sublim(6)">LOGIN</button>
                 <div class="login-register">
                     <p>
                         <RouterLink to="/phone">电话验证登录</RouterLink>
