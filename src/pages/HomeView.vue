@@ -24,7 +24,6 @@ let themeModelBtn = () => {
         <Aside />
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
         <el-main>
           <transition name="fade" mode="out-in">
             <RouterView />
@@ -68,4 +67,5 @@ let themeModelBtn = () => {
     }
   }
 }
+ 
 </style>

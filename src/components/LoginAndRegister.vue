@@ -5,19 +5,18 @@ let isactive = ref(false);
 const registerLink = () => {
     isactive.value = !isactive.value;
 };
-
 //验证码
 let show_num:number[]|number[] = [];
 let value = '';
-function sublim(length:number = 6) {
+function sublim() {
     let num = show_num.join("");
     if (!value) return alert('请输入验证码！');
     if (value == num) {
         alert('提交成功！');
-        dj(length);
+        dj();
     } else {
         alert('验证码错误！\n你输入的是:  ' + value + "\n正确的是:  " + num + '\n请重新输入！');
-        dj(length);
+        dj();
     }
 };
 function charList(length = 26, code = 'a') {
@@ -48,6 +47,10 @@ function draw(show_num:string[]|number[], codeLength = 6) { // codeLength: 设�
     let canvas = document.getElementById("canvas");//获取到canvas的对象，演员
     let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
     let canvas_width = canvas!.width;
+    console.log('canvas',canvas);
+
+    console.log('canvas_width',canvas_width);
+    
     let canvas_height = canvas!.height;
     context.clearRect(0, 0, canvas_width, canvas_height);
 
@@ -97,8 +100,8 @@ function randomColor() {
     var b = Math.floor(Math.random() * 256);
     return "rgb(" + r + "," + g + "," + b + ")";
 }
-function dj(length:number = 6) {
-    draw(show_num,length);
+function dj() {
+    draw(show_num,6);
 }
 onMounted(() => {
     show_num = [];
@@ -218,7 +221,7 @@ const closeVerify = (index:number) => {
                 <div class="input-box code">
                     <input type="text" required v-model=value maxlength="6">
                     <div id="code-btn" onclick="">
-                        <canvas id="canvas" @click="dj(6)"></canvas>
+                        <canvas id="canvas" @click="dj()"></canvas>
                     </div>
                     <label>验证码</label>
                 </div>
@@ -226,7 +229,7 @@ const closeVerify = (index:number) => {
                     <label><input type="checkbox">记住密码</label>
                     <RouterLink to="/forget">忘记密码</RouterLink>
                 </div>
-                <button type="submit" class="btn" @click="sublim(6)">LOGIN</button>
+                <button type="submit" class="btn" @click="sublim()">LOGIN</button>
                 <div class="login-register">
                     <p>
                         <RouterLink to="/phone">电话验证登录</RouterLink>
@@ -294,8 +297,7 @@ const closeVerify = (index:number) => {
     </div>
 </template>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
 .wrapper {
     position: relative;
     width: 400px;
@@ -374,7 +376,7 @@ const closeVerify = (index:number) => {
             input {
                 width: 100%;
                 height: 100%;
-                background: transparent;
+                background: transpareb;
                 border: none;
                 outline: none;
                 @include font_color('text-100');
@@ -413,7 +415,7 @@ const closeVerify = (index:number) => {
                 }
 
                 #code-btn {
-                    width: 35%;
+                    width: 60%;
                     padding: 0;
                     outline: none;
                     background-color: transparent;

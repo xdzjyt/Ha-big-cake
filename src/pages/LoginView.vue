@@ -58,7 +58,7 @@ let nav_menu_list = [
 </template>
 
 <style lang="scss" scoped>
-// @import '../assets/scss/common.scss';
+@import '../assets/scss/common.scss';
 .fade-enter-active,
 .fade-leave-active {
      transition: opacity 1s;
@@ -82,6 +82,7 @@ let nav_menu_list = [
     min-width: 400px;
     overflow: hidden;
     transition: all .5s ease-in;
+
 }
 
 header {

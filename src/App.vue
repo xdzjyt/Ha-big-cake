@@ -1,13 +1,10 @@
 <script setup lang="ts">
-
 </script>
-
 <template>
     <transition name="fade" mode="out-in">
         <RouterView />
     </transition>
 </template>
-
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {

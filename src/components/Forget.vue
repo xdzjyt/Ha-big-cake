@@ -40,6 +40,7 @@ function getCode() {
 }
 function draw(show_num:number[]|string[], codeLength = 6) { // codeLength: 设置验证码长度
     let canvas = document.getElementById("canvas");//获取到canvas的对象，演员
+    
     let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
     let canvas_width = canvas!.width;
     let canvas_height = canvas!.height;
@@ -252,7 +253,7 @@ const closeVerify = (index: number) => {
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .wrapper {
     position: relative;
     width: 400px;
@@ -361,7 +362,7 @@ const closeVerify = (index: number) => {
                 }
 
                 #code-btn {
-                    width: 35%;
+                    width: 50%;
                     padding: 0;
                     outline: none;
                     background-color: transparent;
