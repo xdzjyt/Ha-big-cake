@@ -144,9 +144,43 @@ const option3=reactive({
     }
   ]
 })
+const option4 =reactive({
+  legend: {
+    data: ['Allocated Budget', 'Actual Spending']
+  },
+  radar: {
+    // shape: 'circle',
+    indicator: [
+      { name: 'Sales', max: 6500 },
+      { name: 'Administration', max: 16000 },
+      { name: 'Information Technology', max: 30000 },
+      { name: 'Customer Support', max: 38000 },
+      { name: 'Development', max: 52000 },
+      { name: 'Marketing', max: 25000 }
+    ]
+  },
+  series: [
+    {
+      name: 'Budget vs spending',
+      type: 'radar',
+      data: [
+        {
+          value: [4200, 3000, 20000, 35000, 50000, 18000],
+          name: 'Allocated Budget'
+        },
+        {
+          value: [5000, 14000, 28000, 26000, 42000, 21000],
+          name: 'Actual Spending'
+        }
+      ]
+    }
+  ]
+},
 
+)
 onMounted(() => {
   let myChart1 = echarts.init(document.getElementById("myChart1"));
+  let myChart4 = echarts.init(document.getElementById("myChart4"));
   window.addEventListener('resize', function() {
     myChart1.resize();
     myChart2.resize();
@@ -158,7 +192,9 @@ onMounted(() => {
      myChart1.setOption(option1);
      myChart2.setOption(option2);
      myChart3.setOption(option3);
+     myChart4.setOption(option4);
   })
+  console.log
 </script>
 
 <template>
@@ -168,17 +204,30 @@ onMounted(() => {
     </div>
     <div class="head1">
       <div class="categoty" v-for="value in head_list" :key="value.id">
-      <span>{{ value.title }}</span>
+      <span >{{ value.title }}</span>
       <hr>
       <br>
       <span>{{ value.number }}</span>
     </div> 
   </div>
     <div class="main1">
-       <div id="myChart1" style="width:500px; height: 300px"></div>
-       <div  style="width: 500px; height: 300px ; background-color: #fff"></div>
-       <div  style="width: 300px; height: 300px ;background-color: #fff;"></div>
-       <div id="myChart2" style="width: 500px; height: 300px"></div>
+       <div id="myChart1" style="width:500px; height: 300px "></div>
+       <div>
+        <span>最新表单列表：</span>
+        <table width="500px" border="1">
+          <tr>
+            <td>第三季度财报</td>
+          </tr>
+          <tr>
+            <td>物料采购清单</td>
+          </tr>
+          <tr>
+            <td>员工绩效考核报表</td>
+          </tr>
+        </table>
+        </div>
+       <div id="myChart4" style="width: 400px; height: 300px ;"></div>
+       <div id="myChart2" style="width: 600px; height: 300px"></div>
        <div id="myChart3" style="width: 800px; height: 300px"></div>
     </div>
 </div>
@@ -204,7 +253,8 @@ onMounted(() => {
  }
  .head1{
     display: flex;
-    flex-direction: row;
+    flex-direction: row;  
+    justify-content: center;
     
     .categoty{
     background-color: #ebeb6e;
@@ -215,6 +265,11 @@ onMounted(() => {
     height: 100px;
     margin-left: 10px ;
     margin-top: 5px;
+    span{
+      font-size:20px;
+      line-height: 40px;
+      text-align: center; 
+    }
    
  }
 }
@@ -228,7 +283,12 @@ onMounted(() => {
     border-radius: 10px;
     box-shadow: 0 0 10px;
     margin-left: auto;
+    height:300px;
+     span{
+      font-size: 30px;
+     }
+    }
   }
 }
-}
+
 </style>
