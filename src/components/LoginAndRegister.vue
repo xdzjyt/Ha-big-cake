@@ -227,12 +227,12 @@ const closeVerify = (index:number) => {
                 </div>
                 <div class="remember-forgot">
                     <label><input type="checkbox">记住密码</label>
-                    <RouterLink to="/forget">忘记密码</RouterLink>
+                    <RouterLink to="/login/forget">忘记密码</RouterLink>
                 </div>
                 <button type="submit" class="btn" @click="sublim()">LOGIN</button>
                 <div class="login-register">
                     <p>
-                        <RouterLink to="/phone">电话验证登录</RouterLink>
+                        <RouterLink to="/login/phone">电话验证登录</RouterLink>
                     </p>
                     <span>还没有一个账户？<a href="#" @click="registerLink">注册</a></span>
                 </div>

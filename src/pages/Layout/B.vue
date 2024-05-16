@@ -4,11 +4,11 @@ import { onMounted, reactive, ref } from 'vue';
 
 const loading = ref(false);
 const cost_list = ref([
-   { id: 1, label: "总点单量", value: 11455 },
-   { id: 2, label: "今日成交额", value: 114514545 },
-   { id: 3, label: "季度物资成本", value: 114514545 },
-   { id: 4, label: "季度平均利润率", value: 114514545 },
-   { id: 5, label: "月度工时统计", value: 114514545 }
+   { id: 1, label: "总点单量", value: 11455, stand: '单' },
+   { id: 2, label: "今日成交额", value: 114514545, stand: '元' },
+   { id: 3, label: "季度物资成本", value: 114514545, stand: '元' },
+   { id: 4, label: "季度平均利润率", value: 114514545, stand: '%' },
+   { id: 5, label: "月度工时统计", value: 114514545, stand: 'h' }
 ]);
 
 const costRes = ref([0, 0, 0, 0]);
@@ -17,7 +17,6 @@ const { title } = useMenuStore();
 onMounted(() => {
    title.first = '首页';
    title.second = '';
-   //    cost_statistic();
 });
 
 </script>
@@ -28,16 +27,22 @@ onMounted(() => {
          <el-container>
             <el-main>
                <section class="cost-wrapper">
-                  <div class="cost-box" v-for="(item, index) in cost_list" v-loading="loading">
+                  <div class="cost-box" v-for="item in cost_list" v-loading="loading">
                      <div class="label">{{ item.label }}</div>
-                     <div class="value">{{ item.value }}<span v-show="index == 0">单</span><span
-                           v-show="index != 0">￥</span>
+                     <div class="value">{{ item.value }}<span>{{ item.stand }}</span>
                      </div>
                   </div>
                </section>
-               <section class="oneWeek-wrapper">
-                  <div class="oneWeek-box"></div>
-                  <div class="oneWeek-box"></div>
+               <section class="central-wrapper">
+                  <div class="wrapper">
+                     <div class="box box-1-1"></div>
+                     <div class="box box-1-2"></div>
+                     <div class="box box-1-3"></div>
+                  </div>
+                  <div class="wrapper">
+                     <div class="box box-2-1"></div>
+                     <div class="box box-2-2"></div>
+                  </div>
                </section>
             </el-main>
             <el-footer>
@@ -129,22 +134,49 @@ onMounted(() => {
          }
       }
 
-      .oneWeek-wrapper {
+      .central-wrapper {
          width: 100%;
          display: flex;
-         justify-content: center;
+         flex-direction: column;
          align-items: center;
-         gap: 400px;
-         margin-bottom: 50px;
+         justify-content: space-between;
+         padding: 0 50px;
 
-         .oneWeek-box {
-            height: 0;
-            position: relative;
-            padding-top: 22%;
-            width: 40%;
-            border-radius: 12px;
-            box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
-            @include background_color('bg-200');
+         .wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 50px;
+
+            .box {
+               height: 0;
+               position: relative;
+               padding-top: 20%;
+               border-radius: 12px;
+               box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
+               @include background_color('bg-200');
+            }
+
+            .box-1-1,
+            .box-2-1 {
+               flex-grow: 3;
+            }
+
+            .box-1-2 {
+               flex-grow: 4;
+            }
+
+            .box-1-3 {
+               flex-grow: 2;
+            }
+
+            .box-2-2 {
+               flex-grow: 6;
+            }
+
+
          }
       }
    }

@@ -245,7 +245,7 @@ const closeVerify = (index: number) => {
                 </div>
                 <button type="submit" class="btn" @click="sublim(6)">重置密码</button>
                 <div class="returnLogin">
-                    <p>已找回密码?<RouterLink class="login-link" to="/">去登陆</RouterLink>
+                    <p>已找回密码?<RouterLink class="login-link" to="/login">去登陆</RouterLink>
                     </p>
                 </div>
             </form>
