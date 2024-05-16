@@ -35,7 +35,6 @@ let themeModelBtn = () => {
 </template>
 
 <style lang="scss" scoped>
-@import '../assets/scss/common.scss';
 .fade-enter-active,
 .fade-leave-active {
      transition: opacity 1s;
