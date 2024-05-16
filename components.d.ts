@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Aside: typeof import('./src/components/Aside.vue')['default']
+    BarChart: typeof import('./src/components/chart/BarChart.vue')['default']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDivider: typeof import('element-plus/es')['ElDivider']
@@ -18,8 +19,10 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     Forget: typeof import('./src/components/Forget.vue')['default']
+    LineChart: typeof import('./src/components/chart/LineChart.vue')['default']
     LoginAndRegister: typeof import('./src/components/LoginAndRegister.vue')['default']
     PhoneVerify: typeof import('./src/components/PhoneVerify.vue')['default']
+    PieChart: typeof import('./src/components/chart/PieChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

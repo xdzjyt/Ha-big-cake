@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useMenuStore } from '@/stores/menuData';
 import { onMounted, reactive, ref } from 'vue';
+import BarChart from '@/components/chart/BarChart.vue';
+import LineChart from '@/components/chart/LineChart.vue';
+import PieChart from '@/components/chart/PieChart.vue';
 
 const loading = ref(false);
 const cost_list = ref([
@@ -11,7 +14,48 @@ const cost_list = ref([
    { id: 5, label: "月度工时统计", value: 114514545, stand: 'h' }
 ]);
 
-const costRes = ref([0, 0, 0, 0]);
+
+//  物料管理
+const GoodsData = ref([
+   {
+      name: '仓位值',
+      type: 'bar',
+      data: [18203, 23489, 29034, 104970, 131744, 630230]
+   },
+   {
+      name: '警戒值',
+      type: 'bar',
+      data: [19325, 23438, 31000, 121594, 134141, 681807]
+   }
+]);
+const BaryAxisData = reactive({
+   type: 'category',
+   data: ['包装袋', '吸管', '纸杯', '糖浆', '牛奶', '咖啡豆']
+});
+const BarxAxisData = reactive({
+   type: 'value',
+   boundaryGap: [0, 0.01]
+});
+
+// 销量管理
+
+const LineyAxisData = reactive({
+   type: 'value'
+});
+
+const LinexAxisData = reactive({
+   type: 'category',
+   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+});
+
+const SalesData = ref([
+   {
+      data: [150, 230, 224, 218, 135, 147, 260],
+      type: 'line'
+   }
+]);
+
+
 //面包屑
 const { title } = useMenuStore();
 onMounted(() => {
@@ -35,13 +79,21 @@ onMounted(() => {
                </section>
                <section class="central-wrapper">
                   <div class="wrapper">
-                     <div class="box box-1-1"></div>
+                     <div class="box box-1-1">
+                           <BarChart :chart-title="'物料管理'" :chart-data="GoodsData" :yAxis="BaryAxisData"
+                              :xAxis="BarxAxisData" />
+                     </div>
                      <div class="box box-1-2"></div>
                      <div class="box box-1-3"></div>
                   </div>
                   <div class="wrapper">
-                     <div class="box box-2-1"></div>
-                     <div class="box box-2-2"></div>
+                     <div class="box box-2-1">
+                           <LineChart :chartTitle="'销量管理'" :y-axis="LineyAxisData" :x-axis="LinexAxisData"
+                              :chartData="SalesData" />
+                     </div>
+                     <div class="box-2-2 box">
+                        <PieChart />
+                     </div>
                   </div>
                </section>
             </el-main>
@@ -81,6 +133,7 @@ onMounted(() => {
    position: relative;
    height: 100%;
    width: 100%;
+   @include background_color('bg-100');
 
    .el-main {
       display: flex;
@@ -105,7 +158,7 @@ onMounted(() => {
             border-radius: 12px;
             box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
             text-align: center;
-            @include background_color('bg-200');
+            @include background_color('bg-300');
 
             .label {
                font-size: 20px;
