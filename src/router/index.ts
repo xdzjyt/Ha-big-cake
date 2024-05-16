@@ -7,7 +7,7 @@ const router = createRouter({
     history:createWebHistory(),
     routes :[
         {
-            path:'/',
+            path:'/login',
             component: LoginView,
             children:[
                 {
@@ -25,12 +25,12 @@ const router = createRouter({
             ],
         },
         {
-            path:'/home',
+            path:'/',
             component:()=>import("@/pages/HomeView.vue"),
             children:[
                 {
                     path:'',
-                    component:()=>import("@/pages/Layout/A.vue"),
+                    component:()=>import("@/pages/Layout/HomeStatistics.vue"),
                 },
                 {
                     path:'b',

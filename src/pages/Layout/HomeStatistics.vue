@@ -163,9 +163,6 @@ onMounted(() => {
 
 <template>
 <div class="main">
-    <div class="head">
-    <h1>首页</h1>
-    </div>
     <div class="head1">
       <div class="categoty" v-for="value in head_list" :key="value.id">
       <span>{{ value.title }}</span>
