@@ -24,7 +24,10 @@ const props = defineProps({
 const chart = ref();
 const option =reactive({
   title: {
-    text: props.chartTitle
+    text: props.chartTitle,
+    textStyle: {
+            color: '#917800',
+        }
   },
   xAxis: {
     type: 'category',

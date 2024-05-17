@@ -27,7 +27,10 @@ const chart = ref();//dom引用
 const option = reactive({
     title: {
         text: props.chartTitle,
-        left: 'center'
+        left: 'center',
+        textStyle: {
+            color: '#917800',
+        }
     },
     tooltip: {
         trigger: 'item',
@@ -36,6 +39,9 @@ const option = reactive({
     legend: {
         bottom: -5,
         data: props.chartLegend,
+        textStyle: {
+            color: '#917800',
+        }
     },
     toolbox: {
         show: true,

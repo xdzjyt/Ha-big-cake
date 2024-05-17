@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Aside: typeof import('./src/components/Aside.vue')['default']
     BarChart: typeof import('./src/components/chart/BarChart.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']

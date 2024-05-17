@@ -1,0 +1,23 @@
+{
+  "id": "4512582",
+  "name": "test",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "4766293",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "269810",
+      "name": "more",
+      "font_class": "more",
+      "unicode": "e6ad",
+      "unicode_decimal": 59053
+    }
+  ]
+}

@@ -23,7 +23,10 @@ const props = defineProps({
 const chart = ref();
 const option = reactive({
     title: {
-        text: props.chartTitle
+        text: props.chartTitle,
+        textStyle: {
+            color: '#917800',
+        }
     },
     tooltip: {
         trigger: 'axis',
@@ -31,7 +34,8 @@ const option = reactive({
             type: 'shadow'
         }
     },
-    legend: {},
+    legend: {
+    },
     grid: {
         left: '3%',
         right: '4%',

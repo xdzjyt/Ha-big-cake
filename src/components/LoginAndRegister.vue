@@ -303,6 +303,7 @@ const closeVerify = (index:number) => {
     width: 400px;
     height: 520px;
     background-color: transparent;
+    transition: .3s ease;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     backdrop-filter: blur(20px);
@@ -376,7 +377,7 @@ const closeVerify = (index:number) => {
             input {
                 width: 100%;
                 height: 100%;
-                background: transpareb;
+                background: transparent;
                 border: none;
                 outline: none;
                 @include font_color('text-100');

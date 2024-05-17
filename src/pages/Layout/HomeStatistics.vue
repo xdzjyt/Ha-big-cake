@@ -5,14 +5,15 @@ import BarChart from '@/components/chart/BarChart.vue';
 import LineChart from '@/components/chart/LineChart.vue';
 import SpendingPieChart from '@/components/chart/SpendingPieChart.vue';
 import RosePieChart from '@/components/chart/RosePieChart.vue';
+import { UserFilled } from '@element-plus/icons-vue'
 
 const loading = ref(false);
 const cost_list = ref([
    { id: 1, label: "总点单量", value: 11455, stand: '单' },
-   { id: 2, label: "今日成交额", value: 114514545, stand: '元' },
-   { id: 3, label: "季度物资成本", value: 114514545, stand: '元' },
-   { id: 4, label: "季度平均利润率", value: 114514545, stand: '%' },
-   { id: 5, label: "月度工时统计", value: 114514545, stand: 'h' }
+   { id: 2, label: "今日成交额", value: 1145144, stand: '元' },
+   { id: 3, label: "季度物资成本", value: 1145144, stand: '元' },
+   { id: 4, label: "季度平均利润率", value: 1145144, stand: '%' },
+   { id: 5, label: "月度工时统计", value: 114514, stand: 'h' }
 ]);
 
 
@@ -21,32 +22,41 @@ const GoodsData = ref([
    {
       name: '仓位值',
       type: 'bar',
-      data: [18203, 23489, 29034, 104970, 131744, 630230]
+      data: [18203, 23489, 29034, 104970, 131744, 63023]
    },
    {
       name: '警戒值',
       type: 'bar',
-      data: [19325, 23438, 31000, 121594, 134141, 681807]
+      data: [19325, 23438, 31000, 121594, 134141, 68180]
    }
 ]);
 const BaryAxisData = reactive({
    type: 'category',
-   data: ['包装袋', '吸管', '纸杯', '糖浆', '牛奶', '咖啡豆']
+   data: ['包装袋', '吸管', '纸杯', '糖浆', '牛奶', '咖啡豆'],
+   axisLabel: {
+      color: '#917800',
+   }
 });
 const BarxAxisData = reactive({
    type: 'value',
-   boundaryGap: [0, 0.01]
+   boundaryGap: [0, 0.01],
+   axisLabel: {
+      color: '#917800',
+   }
 });
 
 // 销量管理
 
 const LineyAxisData = reactive({
-   type: 'value'
+   type: 'value',
 });
 
 const LinexAxisData = reactive({
    type: 'category',
-   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+   axisLabel: {
+      color: '#917800',
+   }
 });
 
 const SalesData = ref([
@@ -89,6 +99,25 @@ const IncomeData = ref([
 ]);
 
 
+//报表list
+const report_list = ref([
+   { id: 1, value: '第三季度财报' },
+   { id: 2, value: '物料采购清单' },
+   { id: 3, value: '员工绩效考核列表' },
+   { id: 4, value: '产品调研报告' },
+   { id: 5, value: '市场分析与风险评估报告' },
+   { id: 6, value: '重点信息和情况纪要' },
+]);
+
+//员工list
+const emp_list = ref([
+   { id: 1, name: '张沣睿', avater: '' },
+   { id: 2, name: '刘烨', avater: '' },
+   { id: 3, name: '朱未', avater: '' },
+   { id: 4, name: '叼爷', avater: '' },
+]);
+
+
 //面包屑
 const { title } = useMenuStore();
 onMounted(() => {
@@ -123,13 +152,36 @@ onMounted(() => {
                      <el-col :span="10">
                         <div class="grid-content">
                            <div class="box">
-
+                              <el-scrollbar>
+                                 <div class="report-box">
+                                    <h3>最新表单列表</h3>
+                                    <div class="report">
+                                       <div class="report-item" v-for="item in report_list" :key="item.id">{{ item.value
+                                          }}</div>
+                                    </div>
+                                 </div>
+                              </el-scrollbar>
                            </div>
                         </div>
                      </el-col>
                      <el-col :span="6">
                         <div class="grid-content">
-                           <div class="box"></div>
+                           <div class="box">
+                              <el-scrollbar>
+                                 <div class="emp-box">
+                                    <h3>正在摸鱼的员工</h3>
+                                    <div class="emp">
+                                       <div class="emp-item" v-for="item in emp_list">
+                                          <el-avatar :size="50":src="item.avater">
+                                             <i class="iconfont icon-user" style="font-size: 20px;"></i>
+                                          </el-avatar>
+                                          <span>{{ item.name }}</span>
+                                          <i class="iconfont icon-more" style="font-size: 20px;"></i>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </el-scrollbar>
+                           </div>
                         </div>
                      </el-col>
                   </el-row>
@@ -151,7 +203,7 @@ onMounted(() => {
                                     :chart-data="SpendingData" />
                               </div>
                               <div class="pie-box">
-                                 <RosePieChart :chart-title="''" :chart-data="IncomeData" :chartLegend="IncomeLegend"/>
+                                 <RosePieChart :chart-title="''" :chart-data="IncomeData" :chartLegend="IncomeLegend" />
                               </div>
                            </div>
                         </div>
@@ -215,7 +267,7 @@ onMounted(() => {
 
          .cost-box {
             padding: 10px;
-            width: 20%;
+            width: 18%;
             height: 70%;
             border-radius: 12px;
             box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
@@ -255,6 +307,7 @@ onMounted(() => {
          margin-bottom: 120px;
 
          .box {
+            overflow: hidden;
             width: 100%;
             height: 100%;
             padding: 20px;
@@ -263,6 +316,7 @@ onMounted(() => {
             @include background_color('bg-200');
 
             .pie-box {
+               overflow: hidden;
                width: 50%;
                height: 100%;
                border-right: 2px solid;
@@ -271,6 +325,75 @@ onMounted(() => {
 
                &:last-child {
                   border: none;
+               }
+            }
+         }
+
+         .report-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            @include font_color('text-100');
+
+            h3 {
+               @include font_color('primary-300');
+            }
+
+            .report {
+               box-shadow: inset 4px 4px 4px rgba(49, 61, 68, .8);
+               padding: 5px;
+               border-radius: 8px;
+               border: 2px solid;
+               @include border_color('text-200');
+               user-select: none;
+
+               .report-item {
+                  padding: 10px 6px;
+                  border-bottom: 2px solid;
+                  @include border_color('text-200');
+                  transition: all .3s ease;
+
+                  &:last-child {
+                     border: none;
+                  }
+
+                  &:hover {
+                     opacity: .6;
+                     // filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #fff);
+                     box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
+                     scale: 1.01;
+                  }
+
+                  &:active {
+                     scale: 0.99;
+                  }
+               }
+            }
+         }
+
+         .emp-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            @include font_color('text-100');
+
+            h3 {
+               @include font_color('primary-300');
+            }
+
+            .emp {
+               padding: 5px;
+               border-radius: 8px;
+               border: 2px solid;
+               @include border_color('text-200');
+               user-select: none;
+               .emp-item{
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+
                }
             }
          }
