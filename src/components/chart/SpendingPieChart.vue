@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import { reactive, defineProps, watch, ref } from 'vue';
+import { reactive, defineProps, watch, ref,onMounted } from 'vue';
 
 const props = defineProps({
     chartTitle: {
@@ -12,6 +12,9 @@ const props = defineProps({
     chartLegend: {
         type: Array,
     },
+    value: {
+        type: String,
+    }
 });
 watch(props.chartData, (newValue, oldValue) => {
     if (newValue.length > 0) {
@@ -23,7 +26,7 @@ const chart = ref();//dom引用
 
 const option = reactive({
     title: {
-        text: '开支与收入情况占比',
+        text: props.chartTitle,
         left: 'center'
     },
     tooltip: {
@@ -31,18 +34,8 @@ const option = reactive({
         formatter: '{a} <br/>{b} : {c} ({d}%)'
     },
     legend: {
-        left: 'center',
-        top: 'bottom',
-        data: [
-            'rose1',
-            'rose2',
-            'rose3',
-            'rose4',
-            'rose5',
-            'rose6',
-            'rose7',
-            'rose8'
-        ]
+        bottom: -5,
+        data: props.chartLegend,
     },
     toolbox: {
         show: true,
@@ -55,12 +48,13 @@ const option = reactive({
     },
     series: [
         {
+            name:'开支占比',
             type: 'pie',
-            radius: ['45%', '70%'],
+            radius: ['35%', '65%'],
             avoidLabelOverlap: false,
             label: {
                 show: false,
-                position: 'center'
+                position: 'right',
             },
             labelLine: {
                 show: false,
@@ -68,24 +62,18 @@ const option = reactive({
             emphasis: {
                 label: {
                     show: true,
-                    fontSize: '30',
+                    fontSize: '20',
                     fontWeight: 'bold'
                 }
             },
-            data: [
-                { value: 40, name: '员工薪资' },
-                { value: 33, name: '设备维护' },
-                { value: 28, name: '物料采购' },
-                { value: 22, name: '场地租金' },
-                { value: 20, name: '折损消耗' },
-            ]
+            data: props.chartData,
+            padAngle: 1.5,
         }
     ],
     itemStyle: {
         borderRadius: ['5%', '5%'],
     },
-    radius: ['40%', '70%'],
-})
+});
 
 const initChart = () => {
     let myChart = echarts.init(chart.value);
@@ -102,7 +90,7 @@ onMounted(()=>{
 </script>
 
 <template>
-    <div ref="chart" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;"></div>
+    <div ref="chart" style="width: 100%;height: 100%;"></div>
 </template>
 
 <style lang="scss" scoped></style>

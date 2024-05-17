@@ -15,6 +15,9 @@ const props = defineProps({
     },
     xAxis:{
         type:Object,
+    },
+    value: {
+        type: String,
     }
 });
 
@@ -53,7 +56,7 @@ onMounted(()=>{
 </script>
 
 <template>
-    <div ref="chart" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;"></div>
+    <div ref="chart" style="width: 100%;height: 100%;"></div>
 </template>
 
 <style lang="scss" scoped></style>

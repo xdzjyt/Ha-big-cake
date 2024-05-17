@@ -1,47 +1,48 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import { reactive, defineProps,ref,watch, onMounted } from 'vue';
-
+import { reactive, defineProps, ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
     chartTitle: {
         type: String,
     },
-    yAxis:{
+    yAxis: {
         type: Object,
     },
-    chartData:{
-        type:Array,
+    chartData: {
+        type: Array,
     },
-    xAxis:{
-        type:Object,
+    xAxis: {
+        type: Object,
+    },
+    value: {
+        type: String,
     }
 });
 
 const chart = ref();
 const option = reactive({
-  title: {
-    text: props.chartTitle
-  },
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
-    }
-  },
-  legend: {},
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    containLabel: true
-  },
-  xAxis: props.xAxis,
-  yAxis: props.yAxis,
-  series: props.chartData
+    title: {
+        text: props.chartTitle
     },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
+    legend: {},
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: props.xAxis,
+    yAxis: props.yAxis,
+    series: props.chartData
+},
 )
-
 
 const initChart = () => {
     let myChart = echarts.init(chart.value);
@@ -51,18 +52,18 @@ const initChart = () => {
         myChart.resize();
     });
 };
-watch(props.chartData, (newValue,oldValue) => {
-    if(newValue.length>0){
+watch(props.chartData, (newValue, oldValue) => {
+    if (newValue.length > 0) {
         initChart();
     }
 });
-onMounted(()=>{
+onMounted(() => {
     initChart();
 });
 </script>
 
 <template>
-    <div ref="chart" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;"></div>
+    <div ref="chart" style="width: 100%;height: 100%;"></div>
 </template>
 
 <style lang="scss" scoped></style>

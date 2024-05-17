@@ -5,44 +5,46 @@ import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const { title, asideList_id, active_flag } = useMenuStore();
 
 let aside_list = reactive([
-  { id: 1, icon: 'bx-grid-alt', title: '首页', isactive: 'active',url:'/' },
-  { id: 2, icon: 'bx-cog', title: '物料管理', isactive: '',url:'/B' },
-  { id: 3, icon: 'bx-lemon', title: '商品管理', isactive: '',url:'/c' },
-  { id: 4, icon: 'bx-cart-alt', title: '订单管理', isactive: '',url:'/d' },
-  { id: 5, icon: 'bx-user', title: '员工管理', isactive: '',url:'/e' },
-  { id: 6, icon: 'bx-credit-card', title: '财务管理', isactive: '',url:'/f' },
+  { id: 1, icon: 'bx-grid-alt', title: '首页', isactive: 'active', url: '/' },
+  { id: 2, icon: 'bx-cog', title: '物料管理', isactive: '', url: '/B' },
+  { id: 3, icon: 'bx-lemon', title: '商品管理', isactive: '', url: '/c' },
+  { id: 4, icon: 'bx-cart-alt', title: '订单管理', isactive: '', url: '/d' },
+  { id: 5, icon: 'bx-user', title: '员工管理', isactive: '', url: '/e' },
+  { id: 6, icon: 'bx-credit-card', title: '财务管理', isactive: '', url: '/f' },
 ]);
 
-let isactive = ref('');
+
 let menu_btn = () => {
-  if (!isactive.value) {
-    isactive.value = 'active';
+  if (!active_flag.value) {
+    active_flag.value = 'active';
   }
   else {
-    isactive.value = '';
+    active_flag.value = '';
   }
 };
 
 let Search_btn = () => {
-  if (!isactive.value) { isactive.value = 'active'; }
-  else { isactive.value = ''; }
+  if (!active_flag.value) {
+    active_flag.value = 'active';
+  }
+  else {
+    active_flag.value = '';
+  }
 };
 
-
-const { title , asideList_id } = useMenuStore();
-
 let li_click = (id: number) => {
-  for(let i=0;i<asideList_id.length;++i){
-    asideList_id[i]='';
+  for (let i = 0; i < asideList_id.length; ++i) {
+    asideList_id[i] = '';
   }
   asideList_id[id] = 'active';
 };
 
 //离开
 const token = useTokenStore();
-const out = ()=>{
+const out = () => {
   token.removeToken();
   router.push('/login');
 };
@@ -50,7 +52,7 @@ const out = ()=>{
 </script>
 
 <template>
-  <div class="sidebar" :class="isactive">
+  <div class="sidebar" :class="active_flag.value">
     <div class="logo-content">
       <div class="logo">
         <i class='bx bxl-flutter'></i>
@@ -234,7 +236,8 @@ const out = ()=>{
         transition: opacity .3s ease;
       }
 
-      a,.out {
+      a,
+      .out {
         color: #fff;
         display: flex;
         align-items: center;

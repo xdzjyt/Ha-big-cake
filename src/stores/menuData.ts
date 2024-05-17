@@ -9,10 +9,14 @@ export const useMenuStore = defineStore('menu',()=>{
     });
 
     const asideList_id = ref(['active','','','','','','']);
+    const active_flag = reactive({
+        value: '',
+    })
 
     return {
         title,
-        asideList_id
+        asideList_id,
+        active_flag,
     }
 },{
     persist:true,// 是否选择持续化存储
