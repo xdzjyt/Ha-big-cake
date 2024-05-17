@@ -111,10 +111,10 @@ const report_list = ref([
 
 //员工list
 const emp_list = ref([
-   { id: 1, name: '张沣睿', avater: '' },
-   { id: 2, name: '刘烨', avater: '' },
-   { id: 3, name: '朱未', avater: '' },
-   { id: 4, name: '叼爷', avater: '' },
+   { id: 1, name: '张沣睿', avater: '', identity: '店员' },
+   { id: 2, name: '刘烨', avater: '', identity: '店长' },
+   { id: 3, name: '朱未', avater: '', identity: '副店长' },
+   { id: 4, name: '叼爷', avater: '', identity: '配送员' },
 ]);
 
 
@@ -172,11 +172,14 @@ onMounted(() => {
                                     <h3>正在摸鱼的员工</h3>
                                     <div class="emp">
                                        <div class="emp-item" v-for="item in emp_list">
-                                          <el-avatar :size="50":src="item.avater">
-                                             <i class="iconfont icon-user" style="font-size: 20px;"></i>
+                                          <el-avatar :size="40" :src="item.avater">
+                                             <i class="iconfont icon-user"></i>
                                           </el-avatar>
-                                          <span>{{ item.name }}</span>
-                                          <i class="iconfont icon-more" style="font-size: 20px;"></i>
+                                          <div class="emp-info">
+                                             <div class="name">{{ item.name }}</div>
+                                             <div class="identity">{{ item.identity }}</div>
+                                          </div>
+                                          <i class="iconfont icon-more more"></i>
                                        </div>
                                     </div>
                                  </div>
@@ -353,13 +356,14 @@ onMounted(() => {
                   border-bottom: 2px solid;
                   @include border_color('text-200');
                   transition: all .3s ease;
-
+                  &:first-child{
+                     @include background_color('bg-300');
+                  }
                   &:last-child {
                      border: none;
                   }
 
                   &:hover {
-                     opacity: .6;
                      // filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #fff);
                      box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
                      scale: 1.01;
@@ -389,11 +393,39 @@ onMounted(() => {
                border: 2px solid;
                @include border_color('text-200');
                user-select: none;
-               .emp-item{
+
+               .emp-item {
+                  position: relative;
                   display: flex;
                   align-items: center;
-                  justify-content: space-between;
+                  gap: 10px;
+                  i{
+                     font-size: 30px;
+                  }
+                  .name{
+                     font-size: 16px;
+                     font-weight: 550;
+                     margin-bottom: 5px;
+                  }
+                  .identity{
+                     font-size: 12px;
+                  }
+                  .more{
+                     display: block;
+                     position: absolute;
+                     right: 0;
+                     border-radius: 12px;
+                     transition: all .2s ease;
+                     padding: 5px;
+                     &:hover{
+                        @include background_color('bg-300');
+                        scale: 1.03;
+                     }
+                     &:active {
+                     scale: 0.99;
+                  }
 
+                  }
                }
             }
          }
