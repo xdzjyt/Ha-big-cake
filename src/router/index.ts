@@ -30,27 +30,19 @@ const router = createRouter({
             children:[
                 {
                     path:'',
-                    component:()=>import("@/pages/Layout/A.vue"),
+                    component:()=>import("@/pages/Layout/数据首页.vue"),
                 },
                 {
                     path:'b',
-                    component:()=>import("@/pages/Layout/B.vue"),
+                    component:()=>import("@/pages/Layout/商品.vue"),
                 },
                 {
                     path:'c',
-                    component:()=>import("@/pages/Layout/C.vue"),
+                    component:()=>import("@/pages/Layout/订单.vue"),
                 },
                 {
                     path:'d',
-                    component:()=>import("@/pages/Layout/D.vue"),
-                },
-                {
-                    path:'e',
-                    component:()=>import("@/pages/Layout/E.vue"),
-                },
-                {
-                    path:'f',
-                    component:()=>import("@/pages/Layout/F.vue"),
+                    component:()=>import("@/pages/Layout/员工.vue"),
                 },
             ]
         },

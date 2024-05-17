@@ -194,7 +194,6 @@ onMounted(() => {
      myChart3.setOption(option3);
      myChart4.setOption(option4);
   })
-  console.log
 </script>
 
 <template>
@@ -211,10 +210,10 @@ onMounted(() => {
     </div> 
   </div>
     <div class="main1">
-       <div id="myChart1" style="width:500px; height: 300px "></div>
+        <keep-alive><div id="myChart1" style="width:600px; height: 300px "></div></keep-alive>
        <div>
         <span>最新表单列表：</span>
-        <table width="500px" border="1">
+        <table width="400px" border="1">
           <tr>
             <td>第三季度财报</td>
           </tr>
@@ -226,9 +225,9 @@ onMounted(() => {
           </tr>
         </table>
         </div>
-       <div id="myChart4" style="width: 400px; height: 300px ;"></div>
-       <div id="myChart2" style="width: 600px; height: 300px"></div>
-       <div id="myChart3" style="width: 800px; height: 300px"></div>
+       <keep-alive><div id="myChart4" style="width: 400px; height: 300px ;"></div></keep-alive>
+       <keep-alive><div id="myChart2" style="width: 600px; height: 300px"></div></keep-alive>
+       <keep-alive><div id="myChart3" style="width: 800px; height: 300px"></div></keep-alive> 
     </div>
 </div>
 </template>

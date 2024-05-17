@@ -1,18 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-// import axios from 'axios';
-const phone = ref('');
-const verificationCode = ref('');
-const countDown = ref(0);
-
+import request from '../utils/request';
+let phone = ref<string>('');
+let verificationCode = ref<string>('');
+let countDown = ref<number>(0);
 const sendVerificationCode = () => {
-    if (!phone.value) {
-        alert('请输入手机号');
+    if (!phone.value || phone.value.length != 11) {
+        alert('请输入正确的手机号');
         return;
+    } else {
+        request({
+            method: 'post',
+            url: '/auth/auth/sendCaptcha',
+            data: {
+                phoneNumber: phone.value,
+                userRole: 1
+            }
+        }).then((res: any) => {
+            alert(res.data.message);
+        }).catch(() => {
+            alert('验证码发送失败');
+        });
     }
-    // 模拟发送验证码
-    else alert(`验证码已发送至${phone.value}`);
-    // 开始倒计时
+
     countDown.value = 60;
     const timer = setInterval(() => {
         countDown.value--;
@@ -21,28 +31,12 @@ const sendVerificationCode = () => {
         }
     }, 1000);
 };
-
 const login = () => {
     if (!phone.value || !verificationCode.value) {
         alert('请输入手机号和验证码');
         return;
     }
-
-    //   // 调用后端接口验证验证码
-    //   axios.post('/api/login', {
-    //     phone: phone.value,
-    //     code: verificationCode.value
-    //   }).then(response => {
-    //     // 登录成功，处理逻辑
-    //     alert('登录成功');
-    //   }).catch(error => {
-    //     // 登录失败，处理逻辑
-    //     alert('登录失败');
-    //   });
-    // };
-
-
-}
+};
 
 </script>
 
