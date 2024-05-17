@@ -59,7 +59,7 @@ const login = () => {
                 </div>
                 <button type="submit" class="btn" @click="login">登录</button>
                 <div class="returnLogin">
-                    <p>还未绑定电话号码？<RouterLink class="login-link" to="/">使用密码登陆</RouterLink>
+                    <p>还未绑定电话号码？<RouterLink class="login-link" to="/login">使用密码登陆</RouterLink>
                     </p>
                 </div>
             </form>
@@ -67,7 +67,7 @@ const login = () => {
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .wrapper {
     position: relative;
     width: 400px;

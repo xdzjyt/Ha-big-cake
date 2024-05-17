@@ -1,41 +1,62 @@
 <script lang="ts" setup>
+import { useMenuStore } from '@/stores/menuData.ts';
+import { useTokenStore } from '@/stores/tokenData.ts';
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const { title, asideList_id, active_flag } = useMenuStore();
 
 let aside_list = reactive([
-  { id: 1, icon: 'bx-grid-alt', title: '首页', isactive: 'active',url:'/home' },
-  // { id: 2, icon: 'bx-cog', title: '物料管理', isactive: '',url:'/home/B' },
-  { id: 2, icon: 'bx-lemon', title: '商品管理', isactive: '',url:'/home/b' },
-  { id: 3, icon: 'bx-cart-alt', title: '订单管理', isactive: '',url:'/home/c' },
-  { id: 4, icon: 'bx-user', title: '员工管理', isactive: '',url:'/home/d' },
-  // { id: 6, icon: 'bx-credit-card', title: '财务管理', isactive: '',url:'/home/f' },
+  { id: 1, icon: 'bx-grid-alt', title: '首页', isactive: 'active', url: '/' },
+  { id: 2, icon: 'bx-cog', title: '物料管理', isactive: '', url: '/B' },
+  { id: 3, icon: 'bx-lemon', title: '商品管理', isactive: '', url: '/c' },
+  { id: 4, icon: 'bx-cart-alt', title: '订单管理', isactive: '', url: '/d' },
+  { id: 5, icon: 'bx-user', title: '员工管理', isactive: '', url: '/e' },
+  { id: 6, icon: 'bx-credit-card', title: '财务管理', isactive: '', url: '/f' },
 ]);
 
-let isactive = ref('');
+
 let menu_btn = () => {
-  if (!isactive.value) { isactive.value = 'active'; }
-  else { isactive.value = ''; }
+  if (!active_flag.value) {
+    active_flag.value = 'active';
+  }
+  else {
+    active_flag.value = '';
+  }
 };
 
 let Search_btn = () => {
-  if (!isactive.value) { isactive.value = 'active'; }
-  else { isactive.value = ''; }
+  if (!active_flag.value) {
+    active_flag.value = 'active';
+  }
+  else {
+    active_flag.value = '';
+  }
 };
 
 let li_click = (id: number) => {
-  aside_list.forEach((item) => {
-    item.isactive = '';
-  });
-  aside_list[id - 1].isactive = 'active';
+  for (let i = 0; i < asideList_id.length; ++i) {
+    asideList_id[i] = '';
+  }
+  asideList_id[id] = 'active';
+};
+
+//离开
+const token = useTokenStore();
+const out = () => {
+  token.removeToken();
+  router.push('/login');
 };
 
 </script>
 
 <template>
-  <div class="sidebar" :class="isactive">
+  <div class="sidebar" :class="active_flag.value">
     <div class="logo-content">
       <div class="logo">
         <i class='bx bxl-flutter'></i>
-        <h3>"哈大饼"<br />管理平台</h3>
+        <h3>'哈大饼'<br />外卖配送平台</h3>
       </div>
       <i class='bx bx-menu' id="btn" @click="menu_btn"></i>
     </div>
@@ -48,7 +69,7 @@ let li_click = (id: number) => {
           <input type="text" placeholder="Search">
         </a>
       </li>
-      <li v-for="value in aside_list" :key="value.id" :class="value.isactive" @click="li_click(value.id)">
+      <li v-for="value in aside_list" :key="value.id" :class="asideList_id[value.id]" @click="li_click(value.id)">
         <RouterLink :to="value.url">
           <i class='bx' :class="value.icon"></i>
           <span class="links-name">{{ value.title }}</span>
@@ -58,10 +79,10 @@ let li_click = (id: number) => {
     </ul>
     <ul class="list-logout">
       <li>
-        <RouterLink to="/">
+        <a @click="out">
           <i class="bx bx-log-out"></i>
           <span class="links-name">Logout</span>
-        </RouterLink>
+        </a>
       </li>
     </ul>
   </div>
@@ -69,9 +90,6 @@ let li_click = (id: number) => {
 
 <style lang="scss" scoped>
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 80px;
   height: 100%;
   @include background_color('bg-300');
@@ -79,7 +97,6 @@ let li_click = (id: number) => {
   box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.6);
   padding: 6px 14px;
   transition: all .5s ease;
-  z-index: 1024;
 
   &.active {
     width: 240px;
@@ -96,7 +113,7 @@ let li_click = (id: number) => {
 
     ul li {
       .tooltip {
-        opacity: 0!important;
+        opacity: 0 !important;
       }
 
       .links-name {
@@ -128,7 +145,7 @@ let li_click = (id: number) => {
 
   #btn {
     position: absolute;
-    color: #fff; 
+    color: #fff;
     font-size: 35px;
     width: 50px;
     height: 80px;
@@ -219,7 +236,8 @@ let li_click = (id: number) => {
         transition: opacity .3s ease;
       }
 
-      a {
+      a,
+      .out {
         color: #fff;
         display: flex;
         align-items: center;
@@ -241,9 +259,10 @@ let li_click = (id: number) => {
     width: 70%;
   }
 }
-@keyframes animateBg{
-    to {
-        filter: hue-rotate(360deg);
-    }
+
+@keyframes animateBg {
+  to {
+    filter: hue-rotate(360deg);
   }
+}
 </style>

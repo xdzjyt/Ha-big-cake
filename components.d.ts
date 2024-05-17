@@ -8,16 +8,30 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Aside: typeof import('./src/components/Aside.vue')['default']
-    ElAside: typeof import('element-plus/es')['ElAside']
+    BarChart: typeof import('./src/components/chart/BarChart.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
+    ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
+    ElFooter: typeof import('element-plus/es')['ElFooter']
+    ElHeader: typeof import('element-plus/es')['ElHeader']
     ElMain: typeof import('element-plus/es')['ElMain']
+    ElRow: typeof import('element-plus/es')['ElRow']
+    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     Forget: typeof import('./src/components/Forget.vue')['default']
+    LineChart: typeof import('./src/components/chart/LineChart.vue')['default']
     LoginAndRegister: typeof import('./src/components/LoginAndRegister.vue')['default']
     PhoneVerify: typeof import('./src/components/PhoneVerify.vue')['default']
+    PieChart: typeof import('./src/components/chart/PieChart.vue')['default']
+    RosePieChart: typeof import('./src/components/chart/RosePieChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SpendingPieChart: typeof import('./src/components/chart/SpendingPieChart.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

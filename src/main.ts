@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import '@/assets/style/reset.scss'
+import '@/assets/style/emp/iconfont.css'
 
 const app = createApp(App);
 const pinia =createPinia();

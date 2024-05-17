@@ -6,6 +6,6 @@
     <div>商品</div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

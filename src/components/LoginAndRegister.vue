@@ -227,12 +227,12 @@ const closeVerify = (index:number) => {
                 </div>
                 <div class="remember-forgot">
                     <label><input type="checkbox">记住密码</label>
-                    <RouterLink to="/forget">忘记密码</RouterLink>
+                    <RouterLink to="/login/forget">忘记密码</RouterLink>
                 </div>
                 <button type="submit" class="btn" @click="sublim()">LOGIN</button>
                 <div class="login-register">
                     <p>
-                        <RouterLink to="/phone">电话验证登录</RouterLink>
+                        <RouterLink to="/login/phone">电话验证登录</RouterLink>
                     </p>
                     <span>还没有一个账户？<a href="#" @click="registerLink">注册</a></span>
                 </div>
@@ -303,6 +303,7 @@ const closeVerify = (index:number) => {
     width: 400px;
     height: 520px;
     background-color: transparent;
+    transition: .3s ease;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     backdrop-filter: blur(20px);
@@ -376,7 +377,7 @@ const closeVerify = (index:number) => {
             input {
                 width: 100%;
                 height: 100%;
-                background: transpareb;
+                background: transparent;
                 border: none;
                 outline: none;
                 @include font_color('text-100');

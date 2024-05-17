@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useThemeStyleStore } from '@/stores/data';
+import { useThemeStyleStore } from '@/stores/themeData.ts';
 
 const { themeStyle } = useThemeStyleStore();
 
@@ -16,7 +16,7 @@ let themeModelBtn = () => {
 // 主题色切换
 
 let nav_menu_list = [
-    { id: "1", title: "Home", icon: "bxs-home",url:'/home' },
+    { id: "1", title: "Home", icon: "bxs-home",url:'/' },
     { id: "2", title: "Products", icon: "bxs-package",url:'/' },
     { id: "3", title: "About", icon: "bxs-heart",url:'/' },
     { id: "4", title: "service", icon: "bxs-user-circle",url:'/' },
