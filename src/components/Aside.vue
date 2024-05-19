@@ -9,11 +9,10 @@ const { title, asideList_id, active_flag } = useMenuStore();
 
 let aside_list = reactive([
   { id: 1, icon: 'bx-grid-alt', title: '首页', isactive: 'active', url: '/' },
-  { id: 2, icon: 'bx-cog', title: '物料管理', isactive: '', url: '/B' },
-  { id: 3, icon: 'bx-lemon', title: '商品管理', isactive: '', url: '/c' },
-  { id: 4, icon: 'bx-cart-alt', title: '订单管理', isactive: '', url: '/d' },
-  { id: 5, icon: 'bx-user', title: '员工管理', isactive: '', url: '/e' },
-  { id: 6, icon: 'bx-credit-card', title: '财务管理', isactive: '', url: '/f' },
+  { id: 2, icon: 'bx-lemon', title: '商品管理', isactive: '', url: '/b' },
+  { id: 3, icon: 'bx-cart-alt', title: '订单管理', isactive: '', url: '/c' },
+  { id: 4, icon: 'bx-user', title: '员工管理', isactive: '', url: '/d' },
+  { id: 5, icon: 'bx-credit-card', title: '财务管理', isactive: '', url: '/f' },
 ]);
 
 
