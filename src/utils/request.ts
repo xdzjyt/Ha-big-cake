@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useTokenStore } from '@/stores/tokenData.ts';
-const baseURL = '';
+const baseURL = 'http://116.196.99.29:8081';
 const instance = axios.create({
     baseURL,
     timeout: 5000
@@ -12,7 +12,6 @@ instance.interceptors.request.use(
 
         if (tokenstore.token) {
             config.headers.Authorization = tokenstore.token;
-            config.headers["ngrok-skip-browser-warning"] = 0;
         }
         return config
     },
@@ -22,18 +21,7 @@ instance.interceptors.request.use(
 );
 
 //响应拦截器
-instance.interceptors.response.use(
-    (res) => {
-        if (res.data.code === 1) {
-            return res.data
-        }
-        else {
-            ElMessage.error(res.data.msg);
-            return Promise.reject(res.data);
-        }
-    },
-    (err) => {
-        return Promise.reject(err)
-    }
+instance.interceptors.response.use(res => res.data,
+    err => Promise.reject(err)
 );
 export default instance;

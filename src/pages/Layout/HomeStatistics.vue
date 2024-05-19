@@ -111,7 +111,7 @@ const report_list = ref([
 
 //员工list
 const emp_list = ref([
-   { id: 1, name: '张沣睿', avater: '', identity: '店员' },
+   { id: 1, name: '张沣睿', avater: '@/assets/images/fulilian.jpeg', identity: '店员' },
    { id: 2, name: '刘烨', avater: '', identity: '店长' },
    { id: 3, name: '朱未', avater: '', identity: '副店长' },
    { id: 4, name: '叼爷', avater: '', identity: '配送员' },
@@ -119,10 +119,15 @@ const emp_list = ref([
 
 
 //面包屑
-const { title } = useMenuStore();
+const { title, asideList_id } = useMenuStore();
 onMounted(() => {
    title.first = '首页';
    title.second = '';
+   for (let i = 0; i < asideList_id.length; ++i) {
+      asideList_id[i] = '';
+   }
+   asideList_id[0] = 'active';
+   console.log(asideList_id);
 });
 
 </script>

@@ -1,48 +1,53 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-// import axios from 'axios';
-const phone = ref('');
-const verificationCode = ref('');
+import { postCheckPhone, postPhoneLogin } from '@/api/login';
+import { useTokenStore } from '@/stores/tokenData';
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 const countDown = ref(0);
+const LoginData = reactive({
+    'phoneNumber': '',
+    'userRole': 1,
+    'code': ''
+});
+const token = useTokenStore();
 
-const sendVerificationCode = () => {
-    if (!phone.value) {
-        alert('请输入手机号');
+const sendVerificationCode = async () => {
+    if (!LoginData.phoneNumber) {
+        ElMessage.error('请输入手机号');
         return;
+    } else {
+
+        await postPhoneLogin(LoginData).then((res) => {
+            ElMessage.success(`验证码已发送至${LoginData.phoneNumber}`);
+            // 开始倒计时
+            countDown.value = 60;
+            const timer = setInterval(() => {
+                countDown.value--;
+                if (countDown.value <= 0) {
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }).catch((e) => {
+            ElMessage.error('获取验证码失败呢！');
+        });
     }
-    // 模拟发送验证码
-    else alert(`验证码已发送至${phone.value}`);
-    // 开始倒计时
-    countDown.value = 60;
-    const timer = setInterval(() => {
-        countDown.value--;
-        if (countDown.value <= 0) {
-            clearInterval(timer);
-        }
-    }, 1000);
 };
+const router = useRouter();
 
-const login = () => {
-    if (!phone.value || !verificationCode.value) {
-        alert('请输入手机号和验证码');
+const login = async () => {
+    if (!LoginData.phoneNumber || !LoginData.code) {
+        ElMessage.error('请输入手机号和验证码');
         return;
+    } else {
+        await postCheckPhone(LoginData).then((res) => {
+            ElMessage.success('登录成功！');
+            token.token = res.data.token;
+            router.push('/');
+        }).catch((e)=>{
+            ElMessage.error('登陆失败！');
+        });
     }
-
-    //   // 调用后端接口验证验证码
-    //   axios.post('/api/login', {
-    //     phone: phone.value,
-    //     code: verificationCode.value
-    //   }).then(response => {
-    //     // 登录成功，处理逻辑
-    //     alert('登录成功');
-    //   }).catch(error => {
-    //     // 登录失败，处理逻辑
-    //     alert('登录失败');
-    //   });
-    // };
-
-
-}
+};
 
 </script>
 
@@ -53,17 +58,17 @@ const login = () => {
                 <h2>电话验证登录</h2>
                 <div class="input-box">
                     <i class='bx bxs-phone-call'></i>
-                    <input type="text" v-model="phone" required>
+                    <input type="text" v-model="LoginData.phoneNumber" required>
                     <label>绑定的电话号码</label>
                 </div>
                 <div class="input-box send">
-                    <input type="text" v-model="verificationCode" required>
+                    <input type="text" v-model="LoginData.code" required>
                     <label>验证码</label>
                     <div id="send-btn" @click="sendVerificationCode" :disabled="countDown > 0">
                         <span> {{ countDown > 0 ? `${countDown}秒后重新发送` : '发送验证码' }} </span>
                     </div>
                 </div>
-                <button type="submit" class="btn" @click="login">登录</button>
+                <div class="btn" @click="login">登录</div>
                 <div class="returnLogin">
                     <p>还未绑定电话号码？<RouterLink class="login-link" to="/login">使用密码登陆</RouterLink>
                     </p>
@@ -217,6 +222,8 @@ const login = () => {
         .btn {
             width: 100%;
             height: 45px;
+            line-height: 45px;
+            text-align: center;
             border: none;
             outline: none;
             @include background_color('accent-100');

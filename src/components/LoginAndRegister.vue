@@ -8,7 +8,7 @@ const registerLink = () => {
 //验证码
 let show_num:number[]|number[] = [];
 let value = '';
-function sublim() {
+const sublim = async()=> {
     let num = show_num.join("");
     if (!value) return alert('请输入验证码！');
     if (value == num) {
@@ -47,10 +47,6 @@ function draw(show_num:string[]|number[], codeLength = 6) { // codeLength: 设�
     let canvas = document.getElementById("canvas");//获取到canvas的对象，演员
     let context = canvas!.getContext("2d");//获取到canvas画图的环境，演员表演的舞台
     let canvas_width = canvas!.width;
-    console.log('canvas',canvas);
-
-    console.log('canvas_width',canvas_width);
-    
     let canvas_height = canvas!.height;
     context.clearRect(0, 0, canvas_width, canvas_height);
 
@@ -229,7 +225,7 @@ const closeVerify = (index:number) => {
                     <label><input type="checkbox">记住密码</label>
                     <RouterLink to="/login/forget">忘记密码</RouterLink>
                 </div>
-                <button type="submit" class="btn" @click="sublim()">LOGIN</button>
+                <div class="btn" @click="sublim()">LOGIN</div>
                 <div class="login-register">
                     <p>
                         <RouterLink to="/login/phone">电话验证登录</RouterLink>
@@ -288,7 +284,7 @@ const closeVerify = (index:number) => {
                 <div class="remember-forgot">
                     <label><input type="checkbox">同意相关条款</label>
                 </div>
-                <button type="submit" class="btn">sign up</button>
+                <div class="btn">sign up</div>
                 <div class="login-register">
                     <span>已经拥有账户?<a href="#" class="login-link" @click="registerLink">去登陆</a></span>
                 </div>
@@ -512,6 +508,8 @@ const closeVerify = (index:number) => {
         .btn {
             width: 100%;
             height: 45px;
+            line-height: 45px;
+            text-align: center;
             border: none;
             outline: none;
             @include background_color('accent-100');

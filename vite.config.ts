@@ -35,13 +35,6 @@ export default defineConfig({
   server:{
     open:true,
     port:5174,
-    proxy:{
-      '/api':{
-        target:'',
-        changeOrigin:true,
-        rewrite:path =>path.replace(/^\/api/,''),
-      },
-    }
   },
   resolve:{
     alias:{

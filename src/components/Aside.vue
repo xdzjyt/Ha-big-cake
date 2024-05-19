@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { getIsLogin, postOutLogin } from '@/api/login';
 import { useMenuStore } from '@/stores/menuData.ts';
 import { useTokenStore } from '@/stores/tokenData.ts';
 import { reactive, ref } from 'vue';
@@ -44,7 +45,9 @@ let li_click = (id: number) => {
 
 //离开
 const token = useTokenStore();
-const out = () => {
+const out = async () => {
+  await getIsLogin();
+  await postOutLogin();
   token.removeToken();
   router.push('/login');
 };
@@ -257,6 +260,7 @@ const out = () => {
     bottom: 0;
     margin: 15px 0;
     width: 70%;
+    user-select: none;
   }
 }
 
