@@ -120,6 +120,7 @@ const { title } = useMenuStore();
       z-index: 99;
       border-bottom: 2px solid rgba(0, 0, 0, .3);
       box-shadow: 0 0 30px rgba(0, 0, 0, .8);
+      transition: all .5s ease-in;
       @include background_color('bg-200');
 
       .home-title {

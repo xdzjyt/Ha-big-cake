@@ -251,6 +251,7 @@ onMounted(() => {
    height: 100%;
    width: 100%;
    @include background_color('bg-100');
+   transition: all .5s ease-in;
 
    .el-main {
       display: flex;
