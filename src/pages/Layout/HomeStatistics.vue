@@ -318,6 +318,12 @@ onMounted(() => {
             border-radius: 12px;
             box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
             @include background_color('bg-200');
+            transition: all .3s ease;
+
+            &:hover {
+               box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
+               scale: 1.01;
+            }
 
             .pie-box {
                overflow: hidden;
@@ -357,9 +363,11 @@ onMounted(() => {
                   border-bottom: 2px solid;
                   @include border_color('text-200');
                   transition: all .3s ease;
-                  &:first-child{
+
+                  &:first-child {
                      @include background_color('bg-300');
                   }
+
                   &:last-child {
                      border: none;
                   }
@@ -400,31 +408,37 @@ onMounted(() => {
                   display: flex;
                   align-items: center;
                   gap: 10px;
-                  i{
+
+                  i {
                      font-size: 30px;
                   }
-                  .name{
+
+                  .name {
                      font-size: 16px;
                      font-weight: 550;
                      margin-bottom: 5px;
                   }
-                  .identity{
+
+                  .identity {
                      font-size: 12px;
                   }
-                  .more{
+
+                  .more {
                      display: block;
                      position: absolute;
                      right: 0;
                      border-radius: 12px;
                      transition: all .2s ease;
                      padding: 5px;
-                     &:hover{
+
+                     &:hover {
                         @include background_color('bg-300');
                         scale: 1.03;
                      }
+
                      &:active {
-                     scale: 0.99;
-                  }
+                        scale: 0.99;
+                     }
 
                   }
                }
