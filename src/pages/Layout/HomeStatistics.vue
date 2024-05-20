@@ -12,7 +12,7 @@ const cost_list = ref([
    { id: 1, label: "总点单量", value: 11455, stand: '单' },
    { id: 2, label: "今日成交额", value: 1145144, stand: '元' },
    { id: 3, label: "季度物资成本", value: 1145144, stand: '元' },
-   { id: 4, label: "季度平均利润率", value: 1145144, stand: '%' },
+   { id: 4, label: "季度平均利率", value: 1145144, stand: '%' },
    { id: 5, label: "月度工时统计", value: 114514, stand: 'h' }
 ]);
 
@@ -111,18 +111,23 @@ const report_list = ref([
 
 //员工list
 const emp_list = ref([
-   { id: 1, name: '张沣睿', avater: '' },
-   { id: 2, name: '刘烨', avater: '' },
-   { id: 3, name: '朱未', avater: '' },
-   { id: 4, name: '叼爷', avater: '' },
+   { id: 1, name: '张沣睿', avater: '@/assets/images/fulilian.jpeg', identity: '店员' },
+   { id: 2, name: '刘烨', avater: '', identity: '店长' },
+   { id: 3, name: '朱未', avater: '', identity: '副店长' },
+   { id: 4, name: '叼爷', avater: '', identity: '配送员' },
 ]);
 
 
 //面包屑
-const { title } = useMenuStore();
+const { title, asideList_id } = useMenuStore();
 onMounted(() => {
    title.first = '首页';
    title.second = '';
+   for (let i = 0; i < asideList_id.length; ++i) {
+      asideList_id[i] = '';
+   }
+   asideList_id[0] = 'active';
+   console.log(asideList_id);
 });
 
 </script>
@@ -172,11 +177,14 @@ onMounted(() => {
                                     <h3>正在摸鱼的员工</h3>
                                     <div class="emp">
                                        <div class="emp-item" v-for="item in emp_list">
-                                          <el-avatar :size="50":src="item.avater">
-                                             <i class="iconfont icon-user" style="font-size: 20px;"></i>
+                                          <el-avatar :size="40" :src="item.avater">
+                                             <i class="iconfont icon-user"></i>
                                           </el-avatar>
-                                          <span>{{ item.name }}</span>
-                                          <i class="iconfont icon-more" style="font-size: 20px;"></i>
+                                          <div class="emp-info">
+                                             <div class="name">{{ item.name }}</div>
+                                             <div class="identity">{{ item.identity }}</div>
+                                          </div>
+                                          <i class="iconfont icon-more more"></i>
                                        </div>
                                     </div>
                                  </div>
@@ -248,6 +256,7 @@ onMounted(() => {
    height: 100%;
    width: 100%;
    @include background_color('bg-100');
+   transition: all .5s ease-in;
 
    .el-main {
       display: flex;
@@ -314,6 +323,12 @@ onMounted(() => {
             border-radius: 12px;
             box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
             @include background_color('bg-200');
+            transition: all .3s ease;
+
+            &:hover {
+               box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
+               scale: 1.01;
+            }
 
             .pie-box {
                overflow: hidden;
@@ -354,12 +369,15 @@ onMounted(() => {
                   @include border_color('text-200');
                   transition: all .3s ease;
 
+                  &:first-child {
+                     @include background_color('bg-300');
+                  }
+
                   &:last-child {
                      border: none;
                   }
 
                   &:hover {
-                     opacity: .6;
                      // filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #fff);
                      box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
                      scale: 1.01;
@@ -389,11 +407,45 @@ onMounted(() => {
                border: 2px solid;
                @include border_color('text-200');
                user-select: none;
-               .emp-item{
+
+               .emp-item {
+                  position: relative;
                   display: flex;
                   align-items: center;
-                  justify-content: space-between;
+                  gap: 10px;
 
+                  i {
+                     font-size: 30px;
+                  }
+
+                  .name {
+                     font-size: 16px;
+                     font-weight: 550;
+                     margin-bottom: 5px;
+                  }
+
+                  .identity {
+                     font-size: 12px;
+                  }
+
+                  .more {
+                     display: block;
+                     position: absolute;
+                     right: 0;
+                     border-radius: 12px;
+                     transition: all .2s ease;
+                     padding: 5px;
+
+                     &:hover {
+                        @include background_color('bg-300');
+                        scale: 1.03;
+                     }
+
+                     &:active {
+                        scale: 0.99;
+                     }
+
+                  }
                }
             }
          }

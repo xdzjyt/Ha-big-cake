@@ -58,7 +58,6 @@ let nav_menu_list = [
 </template>
 
 <style lang="scss" scoped>
-@import '../assets/scss/common.scss';
 .fade-enter-active,
 .fade-leave-active {
      transition: opacity 1s;
