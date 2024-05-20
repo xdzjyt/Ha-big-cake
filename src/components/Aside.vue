@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getIsLogin, postOutLogin } from '@/api/login';
+import { postOutLogin } from '@/api/login';
 import { useMenuStore } from '@/stores/menuData.ts';
 import { useTokenStore } from '@/stores/tokenData.ts';
 import { reactive, ref } from 'vue';
@@ -46,8 +46,11 @@ let li_click = (id: number) => {
 //离开
 const token = useTokenStore();
 const out = async () => {
-  await getIsLogin();
-  await postOutLogin();
+  await postOutLogin().then(()=>{
+    ElMessage.success('已退出登录');
+  }).catch(()=>{
+    ElMessage.error('退出失败！');
+  });
   token.removeToken();
   router.push('/login');
 };

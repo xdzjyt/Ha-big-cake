@@ -11,7 +11,7 @@ instance.interceptors.request.use(
         const tokenstore = useTokenStore();
 
         if (tokenstore.token) {
-            config.headers.Authorization = tokenstore.token;
+            config.headers['satoken'] = tokenstore.token;
         }
         return config
     },
@@ -25,3 +25,13 @@ instance.interceptors.response.use(res => res.data,
     err => Promise.reject(err)
 );
 export default instance;
+
+// ⠀⠰⢷⢿⠄ 
+// ⠀⠀⠀⠀⠀⣼⣷⣄ 
+// ⠀⠀⣤⣿⣇⣿⣿⣧⣿⡄ 
+// ⢴⠾⠋⠀⠀⠻⣿⣷⣿⣿⡀ 
+// ○ ⠀⢀⣿⣿⡿⢿⠈⣿ 
+// ⠀⠀⠀⢠⣿⡿⠁⠀⡊⠀⠙ 
+// ⠀⠀⠀⢿⣿⠀⠀⠹⣿ 
+// ⠀⠀⠀⠀⠹⣷⡀⠀⣿⡄ 
+// ⠀⠀⠀⠀⣀⣼⣿⠀⢈⣧.

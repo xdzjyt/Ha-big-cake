@@ -21,6 +21,7 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Forget: typeof import('./src/components/Forget.vue')['default']
     LineChart: typeof import('./src/components/chart/LineChart.vue')['default']
     LoginAndRegister: typeof import('./src/components/LoginAndRegister.vue')['default']
