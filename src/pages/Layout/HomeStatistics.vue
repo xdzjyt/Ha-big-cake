@@ -127,7 +127,6 @@ onMounted(() => {
       asideList_id[i] = '';
    }
    asideList_id[0] = 'active';
-   console.log(asideList_id);
 });
 
 </script>
@@ -184,7 +183,10 @@ onMounted(() => {
                                              <div class="name">{{ item.name }}</div>
                                              <div class="identity">{{ item.identity }}</div>
                                           </div>
-                                          <i class="iconfont icon-more more"></i>
+                                          <el-tooltip class="box-item" effect="dark" content="给予抱抱\(￣︶￣*\))"
+                                             placement="right">
+                                             <i class="iconfont icon-more more"></i>
+                                          </el-tooltip>
                                        </div>
                                     </div>
                                  </div>
@@ -282,11 +284,17 @@ onMounted(() => {
             box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
             text-align: center;
             @include background_color('bg-300');
+            transition: all .3s ease;
+
+            &:hover {
+               transform: translateY(-3%);
+            }
 
             .label {
                font-size: 20px;
                @include font_color('text-200');
                padding: 20px 10px 10px 10px;
+               user-select: none;
             }
 
             .value {

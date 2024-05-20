@@ -40,10 +40,14 @@ const login = async () => {
         return;
     } else {
         await postCheckPhone(LoginData).then((res) => {
-            ElMessage.success('登录成功！');
-            token.token = res.data.token;
-            router.push('/');
-        }).catch((e)=>{
+            if (res.code === 500) {
+                ElMessage.error(res.msg);
+            } else {
+                ElMessage.success('登录成功！');
+                token.token = res.data.token;
+                router.push('/');
+            }
+        }).catch((e) => {
             ElMessage.error('登陆失败！');
         });
     }
@@ -64,7 +68,7 @@ const login = async () => {
                 <div class="input-box send">
                     <input type="text" v-model="LoginData.code" required>
                     <label>验证码</label>
-                    <div id="send-btn" @click="sendVerificationCode" :disabled="countDown > 0">
+                    <div id="send-btn" @click="sendVerificationCode" :class="{ 'disabled': countDown > 0 }">
                         <span> {{ countDown > 0 ? `${countDown}秒后重新发送` : '发送验证码' }} </span>
                     </div>
                 </div>
@@ -79,6 +83,12 @@ const login = async () => {
 </template>
 
 <style lang="scss" scoped>
+.disabled {
+    cursor: not-allowed;
+    color: #ccc;
+    pointer-events: none;
+}
+
 .wrapper {
     position: relative;
     width: 400px;
