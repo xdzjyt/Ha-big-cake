@@ -2,7 +2,64 @@
 import BarChart from '@/components/chart/BarChart.vue';
 import { ref, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
+import type { FormProps } from 'element-plus'
+import type { ImageProps } from 'element-plus'
+import imageSrc from '@/assets/images/R-C.jpg'
+const fits = [
+  'fill'
+] as ImageProps['fit'][]
+const labelPosition = ref<FormProps['labelPosition']>('top')
 const input = ref('');
+const form = reactive([
+  {
+    name: '',
+    region: '',
+    date1: '',
+    date2: '',
+    delivery: false,
+    type: [],
+    resource: '',
+    desc: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+  {
+    name: '',
+  },
+]
+)
+
 //  仓位速览
 const GoodsData = ref([
   {
@@ -13,7 +70,8 @@ const GoodsData = ref([
   {
     name: '警戒值',
     type: 'bar',
-    data: [20, 20, 20, 20, 20, 20]
+    data: [20, 20, 20, 20, 20, 20],
+    color: 'red'
   }
 ]);
 const BarxAxisData = reactive({
@@ -21,7 +79,7 @@ const BarxAxisData = reactive({
   data: ['包装袋', '吸管', '纸杯', '糖浆', '牛奶', '咖啡豆'],
   axisLabel: {
     color: '#917800',
-  }
+  },
 });
 const BaryAxisData = reactive({
   type: 'value',
@@ -33,15 +91,15 @@ const BaryAxisData = reactive({
 
 //仓位变动明细
 const report_list = ref([
-  { id: 1, value: '2024年4月9日咖啡豆进货+100'},
-  { id: 2, value: '2024年4月9日糖浆进货+100'} ,
-  { id: 3, value: '2024年4月9日牛奶使用-20'},
-  { id: 4, value: '2024年4月9日纸杯进货+100'},
-  { id: 5, value: '2024年4月9日吸管损耗-10'},
-  { id: 6, value: '2024年4月9日包装袋损耗-10'},
-  { id: 7, value: '2024年4月9日包装袋进货+10'},
-  { id: 8, value: '2024年4月9日吸管损耗-10'},
-  { id: 9, value: '2024年4月9日包装袋损耗-10'},
+  { id: 1, value: '2024年4月9日咖啡豆进货+100' },
+  { id: 2, value: '2024年4月9日糖浆进货+100' },
+  { id: 3, value: '2024年4月9日牛奶使用-20' },
+  { id: 4, value: '2024年4月9日纸杯进货+100' },
+  { id: 5, value: '2024年4月9日吸管损耗-10' },
+  { id: 6, value: '2024年4月9日包装袋损耗-10' },
+  { id: 7, value: '2024年4月9日包装袋进货+10' },
+  { id: 8, value: '2024年4月9日吸管损耗-10' },
+  { id: 9, value: '2024年4月9日包装袋损耗-10' },
 ]);
 </script>
 <template>
@@ -49,7 +107,7 @@ const report_list = ref([
     <el-container>
       <el-main class="main-wrapper">
         <el-row :gutter="20">
-          <el-col :span="16">
+          <el-col :span="14">
             <div class="leftArea">
               <div class="box1">
                 <BarChart :chart-title="'物料管理'" :chart-data="GoodsData" :yAxis="BaryAxisData" :xAxis="BarxAxisData" />
@@ -67,11 +125,60 @@ const report_list = ref([
               </div>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="10">
             <div class="rightArea">
               <div class="box3">
-                <el-input v-model="input" style="width: 240px" placeholder="Please input" />
-                <el-button type="primary" :icon="Search">Search</el-button>
+                <el-input v-model="input" style="width: 240px; margin: 10px 10px" placeholder="请输入想要查询的物料" />
+                <el-button type="primary" :icon="Search" style="margin-left: 20px;width: 10%;">搜索</el-button>
+                <h3 style="margin: 10px 0;">物料快捷操作</h3>
+                <el-form :model="form" label-width="auto" style="max-width: 600px" :label-position="labelPosition"
+                  class="inline-form">
+                  <el-form-item label="物料名称">
+                    <el-input v-model="form[0].name" placeholder="糖浆/牛奶/纸杯" size="large"/>
+                  </el-form-item>
+                  <el-image style="width: 150px; height: 150px" :src="imageSrc" :fit="fits" />
+                  <el-image style="width: 150px; height: 150px" :src="imageSrc" :fit="fits" />
+                  <el-form-item label="变化数量">
+                    <el-input v-model="form[1].name" placeholder="增加/减少" size="large"/>
+                  </el-form-item>
+                  <el-form-item label="变动类型">
+                    <el-input v-model="form[2].name" placeholder="采购/抽样/损耗"size="large"/>
+                  </el-form-item>
+                  <el-form-item label="生产日期">
+                    <el-col :span="24">
+                      <el-date-picker v-model="form[3].name" type="date" placeholder="Pick a date"
+                        style="width: 100%" size="large"/>
+                    </el-col>
+                  </el-form-item>
+                  <el-form-item label="保质期/日">
+                    <el-input v-model="form[4].name" style="width: 70%;" placeholder="减少可不填"size="large"/>
+                  </el-form-item>
+                  <el-form-item label="物料来源" style="width: 60%;">
+                    <el-input v-model="form[5].name" placeholder="xx省 xx市 xx区/县 xx公司"size="large"/>
+                  </el-form-item>
+                  <el-form-item label="单价" style="width: 50%; margin-right: 10px">
+                    <el-input v-model="form[6].name"size="large"/>
+                  </el-form-item>
+                  <el-form-item label="总价">
+                    <el-input v-model="form[7].name" size="large" />
+                  </el-form-item>
+                  <el-form-item label="仓位" style="width: 55%; margin-right: 10px;">
+                    <el-input v-model="form[8].name" placeholder="C5-H003-1238" size="large"/>
+                  </el-form-item>
+                  <el-form-item label="变动时间">
+                    <el-input v-model="form[9].name" placeholder="2021/9/12"size="large" />
+                  </el-form-item>
+                  <el-form-item label="操作员" style="width: 55%;">
+                    <el-input v-model="form[10].name" placeholder="李华"size="large"/>
+                  </el-form-item>
+                  <el-form-item label="备注" :rows="6" style=" width: 80%;  margin-right: 100px; margin-bottom: 10px;">
+                    <el-input v-model="form[0].desc" type="textarea" style="height: 100%;" />
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary">Create</el-button>
+                    <el-button>Cancel</el-button>
+                  </el-form-item>
+                </el-form>
               </div>
             </div>
           </el-col>
@@ -97,7 +204,7 @@ const report_list = ref([
 
 
     .box1 {
-      width: 70%;
+      width: 95%;
       height: 50%;
       padding: 10px;
       border-radius: 12px;
@@ -170,11 +277,13 @@ const report_list = ref([
           }
         }
       }
-    } 
+    }
   }
+
   .rightArea {
     height: 100%;
-    .box3{
+
+    .box3 {
       height: 100%;
       width: 100%;
       padding: 5px;
@@ -186,6 +295,19 @@ const report_list = ref([
       &:hover {
         box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
         scale: 1.01;
+      }
+      h3{
+        @include font_color('primary-300');
+         padding-left: 30px;
+         display: inline-block;
+         width: 30%;
+        }
+      .inline-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: center;
+        margin-left: 10px;
       }
     }
   }
