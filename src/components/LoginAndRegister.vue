@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted,reactive } from 'vue';
-
+import request from '../utils/request';
 let isactive = ref(false);
 const registerLink = () => {
     isactive.value = !isactive.value;

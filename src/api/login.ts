@@ -17,13 +17,13 @@ export const postCheckPhone = (data: object) => {
 } //验证电话号码和验证码
 
 export const getIsLogin = () => {
-    return request.get('/auth/auth/isLogin');
-} //获取登录状态
-
-export const postOutLogin = () => {
-    return request.post('/auth/auth/outLine', {
+    return request.get('/auth/auth/isLogin', {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     });
+} //获取登录状态
+
+export const postOutLogin = () => {
+    return request.post('/auth/auth/outLine');
 } //退出登录

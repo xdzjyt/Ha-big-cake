@@ -26,6 +26,7 @@ const option = reactive({
         text: props.chartTitle,
         textStyle: {
             color: '#917800',
+
         }
     },
     tooltip: {
@@ -37,7 +38,7 @@ const option = reactive({
     legend: {
     },
     grid: {
-        left: '3%',
+        left: '10%',
         right: '4%',
         bottom: '3%',
         containLabel: true

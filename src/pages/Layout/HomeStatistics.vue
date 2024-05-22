@@ -13,7 +13,7 @@ const cost_list = ref([
    { id: 1, label: "总点单量", value: 11455, stand: '单' },
    { id: 2, label: "今日成交额", value: 1145144, stand: '元' },
    { id: 3, label: "季度物资成本", value: 1145144, stand: '元' },
-   { id: 4, label: "季度平均利润率", value: 1145144, stand: '%' },
+   { id: 4, label: "季度平均利率", value: 1145144, stand: '%' },
    { id: 5, label: "月度工时统计", value: 114514, stand: 'h' }
 ]);
 
@@ -28,12 +28,13 @@ const GoodsData = ref([
    {
       name: '仓位值',
       type: 'bar',
-      data: [18203, 23489, 29034, 104970, 131744, 63023]
+      data: [18203, 23489, 29034, 14970, 11744,11023]
    },
    {
       name: '警戒值',
       type: 'bar',
-      data: [19325, 23438, 31000, 121594, 134141, 68180]
+      data: [4932, 6348, 3100, 4594, 1341, 6180],
+      color: 'red'
    }
 ]);
 const BaryAxisData = reactive({
@@ -347,7 +348,8 @@ onMounted(() => {
             transition: all .3s ease;
 
             &:hover {
-               transform: translateY(-3%);
+               box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
+               scale: 1.01;
             }
 
             .pie-box {
