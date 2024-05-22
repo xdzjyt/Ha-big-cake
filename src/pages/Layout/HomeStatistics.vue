@@ -140,7 +140,7 @@ onMounted(() => {
    for (let i = 0; i < asideList_id.length; ++i) {
       asideList_id[i] = '';
    }
-   asideList_id[0] = 'active';
+   asideList_id[1] = 'active';
 });
 
 </script>

@@ -29,13 +29,13 @@ router.beforeEach((to, from, next) => {
     // 已登录
     if (token.token) {
         // 不能再跳转到login
-        if (to.fullPath == '/login') {
+        if (to.fullPath == '/login'|| to.path == '/login/forget' || to.path == '/login/phone') {
             next(from.path)
         } else {
             next()
         }
     } else { // 未登录
-        if (to.path != '/login') {
+        if (to.path != '/login' && to.path != '/login/forget' && to.path != '/login/phone') {
             // 不能访问登录页以外的页面
             next('/login')
         } else {

@@ -33,16 +33,24 @@ const router = createRouter({
                     component:()=>import("@/pages/Layout/HomeStatistics.vue"),
                 },
                 {
-                    path:'b',
-                    component:()=>import("@/pages/Layout/商品.vue"),
+                    path:'ware',
+                    component:()=>import("@/pages/Layout/WareManage.vue"),
                 },
                 {
-                    path:'c',
-                    component:()=>import("@/pages/Layout/订单.vue"),
+                    path:'goods',
+                    component:()=>import("@/pages/Layout/GoodsManage.vue"),
                 },
                 {
-                    path:'d',
-                    component:()=>import("@/pages/Layout/员工.vue"),
+                    path:'order',
+                    component:()=>import("@/pages/Layout/OrderManage.vue"),
+                },
+                {
+                    path:'employee',
+                    component:()=>import("@/pages/Layout/EmployeeManage.vue"),
+                },
+                {
+                    path:'finance',
+                    component:()=>import("@/pages/Layout/FinanceManage.vue"),
                 },
             ]
         },
