@@ -3,6 +3,7 @@ import { postCheckPhone, postPhoneLogin } from '@/api/login';
 import { useTokenStore } from '@/stores/tokenData';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 const countDown = ref(0);
 const LoginData = reactive({
     'phoneNumber': '',
@@ -17,7 +18,7 @@ const sendVerificationCode = async () => {
         return;
     } else {
 
-        await postPhoneLogin(LoginData).then((res) => {
+        await postPhoneLogin(LoginData).then(() => {
             ElMessage.success(`验证码已发送至${LoginData.phoneNumber}`);
             // 开始倒计时
             countDown.value = 60;
@@ -27,7 +28,7 @@ const sendVerificationCode = async () => {
                     clearInterval(timer);
                 }
             }, 1000);
-        }).catch((e) => {
+        }).catch(() => {
             ElMessage.error('获取验证码失败呢！');
         });
     }
@@ -40,14 +41,14 @@ const login = async () => {
         return;
     } else {
         await postCheckPhone(LoginData).then((res) => {
-            if (res.code === 500) {
-                ElMessage.error(res.msg);
+            if (res.data.code === 500) {
+                ElMessage.error(res.data.msg);
             } else {
                 ElMessage.success('登录成功！');
                 token.token = res.data.token;
                 router.push('/');
             }
-        }).catch((e) => {
+        }).catch(() => {
             ElMessage.error('登陆失败！');
         });
     }
