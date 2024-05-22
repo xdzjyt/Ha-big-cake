@@ -157,7 +157,7 @@ onMounted(() => {
                           <el-input v-model="form[0].name" placeholder="糖浆/牛奶/纸杯" size="large" />
                         </el-form-item>
                         <el-form-item  style="width: 40%;">
-                          <label slot="label" style="color:#917800;font-size: 18px;">变化数量</label>
+                          <label slot="label" style="color:#917800;font-size: 18px;white-space: nowrap;">变化数量</label>
                           <el-input v-model="form[1].name" placeholder="增加/减少" size="large" />
                         </el-form-item>
                         <el-form-item style="width: 55%;">
@@ -306,7 +306,7 @@ onMounted(() => {
       .box1 {
         overflow: hidden;
         width: 75%;
-        height: 45vh;
+        height: 55vh;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
@@ -321,7 +321,7 @@ onMounted(() => {
 
       .box2 {
         width: 95%;
-        height: 60vh;
+        height: 75vh;
         padding: 30px;
         border-radius: 12px;
         box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
