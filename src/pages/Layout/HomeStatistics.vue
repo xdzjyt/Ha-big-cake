@@ -57,7 +57,7 @@ const BarxAxisData = reactive({
 const getOrder = async ()=>{
    const res = await getOrderAPI();
    console.log(res);
-}
+} 
 
 const LineyAxisData = reactive({
    type: 'value',
