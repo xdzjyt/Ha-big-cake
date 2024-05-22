@@ -5,7 +5,8 @@ import BarChart from '@/components/chart/BarChart.vue';
 import LineChart from '@/components/chart/LineChart.vue';
 import SpendingPieChart from '@/components/chart/SpendingPieChart.vue';
 import RosePieChart from '@/components/chart/RosePieChart.vue';
-import { UserFilled } from '@element-plus/icons-vue'
+import { getOrderAPI } from '@/api/order';
+import { getGoodsAPI } from '@/api/goods';
 
 const loading = ref(false);
 const cost_list = ref([
@@ -18,6 +19,11 @@ const cost_list = ref([
 
 
 //  物料管理
+const getGoods = async ()=>{
+   const res = await getGoodsAPI();
+   console.log(res);
+};
+
 const GoodsData = ref([
    {
       name: '仓位值',
@@ -46,6 +52,11 @@ const BarxAxisData = reactive({
 });
 
 // 销量管理
+
+const getOrder = async ()=>{
+   const res = await getOrderAPI();
+   console.log(res);
+}
 
 const LineyAxisData = reactive({
    type: 'value',
@@ -121,6 +132,8 @@ const emp_list = ref([
 //面包屑
 const { title, asideList_id } = useMenuStore();
 onMounted(() => {
+   getOrder();
+   getGoods();
    title.first = '首页';
    title.second = '';
    for (let i = 0; i < asideList_id.length; ++i) {

@@ -198,6 +198,7 @@ const { title } = useMenuStore();
           border-radius: 50%;
           padding: 8px;
           transition: transform .2s ease;
+          @include background_color('bg-300');
 
           &:hover {
             transform: scale(1.03);
