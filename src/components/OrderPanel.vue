@@ -2,9 +2,13 @@
 import { ref, reactive } from "vue";
 import { type FormInstance } from "element-plus";
 import { useOrderDataStore } from "@/stores/orderData";
+import { useDataStore } from "@/stores/orderData";
 import { postAddOrderAPI } from "@/api/order";
+import { ElMessage } from "element-plus";
 
 const { formInline, dynamicValidateForm } = useOrderDataStore();
+const dataStore = useDataStore();
+const orderId = ref("");
 
 const formRef = ref<FormInstance>(); //获取表单dom
 function debounce(func, delay) {
@@ -73,8 +77,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   postData.sendPlace = formInline.sendPlace;
   postData.orderGoodsDetailRequests = formInline.orderDetailResponses;
   
-  await postAddOrderAPI(postData).then(() => {
+  await postAddOrderAPI(postData).then((res) => {
     ElMessage.success('新增成功！');
+    orderId.value = res.data.orderId;
+    dataStore.setData(orderId.value);
   }).catch(() => {
     ElMessage.error('新增失败！');
   });

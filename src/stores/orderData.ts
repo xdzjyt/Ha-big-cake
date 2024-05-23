@@ -1,5 +1,6 @@
 import { ref, reactive } from "vue"
 import { defineStore } from "pinia"
+import { number } from "echarts"
 
 interface DomainItem {
   actualAmount: number
@@ -46,8 +47,19 @@ export const useOrderDataStore = defineStore('order', () => {
       },
     ],
   });
+  
   return {
     formInline,
     dynamicValidateForm
   }
 })
+export const useDataStore = defineStore('data', {
+  state: () => ({
+    data: 0
+  }),
+  actions: {
+    setData(newData :any) {
+      this.data = newData;
+    }
+  }
+});

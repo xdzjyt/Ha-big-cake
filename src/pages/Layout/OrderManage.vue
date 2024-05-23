@@ -4,12 +4,15 @@ import { useMenuStore } from "@/stores/menuData";
 import { onMounted, ref, reactive } from "vue";
 import OrderPanel from "@/components/OrderPanel.vue";
 import { useOrderDataStore } from "@/stores/orderData";
+import { useDataStore } from "@/stores/orderData";
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
-import { id } from "element-plus/es/locales.mjs";
+import { id } from "element-plus/es/locales";
 
 const { title } = useMenuStore();
 const { formInline, dynamicValidateForm } = useOrderDataStore();
+let orderId = useDataStore();
+let Status = ref(0);
 
 // 查询量
 const search_date = reactive({
@@ -40,7 +43,7 @@ const order_info = ref([
 
 // 表格数据
 interface order {
-  orderId:number
+  orderId: number
   buyer: number
   courier: number
   deliveryTime: string
@@ -84,33 +87,8 @@ const clean = () => {
     { label: "订单id", value: "--" },
   ];
 };
-//新增销售单
-const dialogVisible = ref(false);
-const addorder = async () => {
-  await postAddOrderAPI(
-    {
-      "buyer": 0,
-      "courier": 0,
-      "orderGoodsDetailRequests": [
-        {
-          "actualAmount": 0,
-          "goodsName": "",
-          "goodsNumber": "",
-          "originAmount": 0
-        }
-      ],
-      "orderStatus": 0,
-      "sendPlace": "",
-      "totalAmount": 0
-    }
-  ).then(() => {
-    console.log("新增成功");
-  });
-};
-const emitsGetvisible = (data: boolean) => {
-  dialogVisible.value = data;
-  getorder();
-};
+
+
 
 //条件查询销售单
 
@@ -160,45 +138,14 @@ onMounted(() => {
 const updateOrder = async () => {
   await postUpdataOrderAPI(
     {
-      "id": 0,
-      "orderStatus": 0
+      "id": orderId.$state.data,
+      "orderStatus": Status.value
     }
-  ).then((res) => {
-    console.log(res);
+  ).then(() => {
+    ElMessage.success('更新成功！');
+    order_info.value[5].value = Status.value == 1 ? "已接单" : "已送达";
   })
 }
-const search = async () => {
-  //   clean();
-  //   loading.value = true;
-  //   search_date.date = !search_date.date ? ["", ""] : search_date.date;
-  //   if (search_date.status == "") {
-  //     const res = await orderGetService(search_date.date[0], search_date.date[1]);
-  //     const resData = res.data.data;
-  //     if (resData.length > 0) {
-  //       total_page_number.value = resData.length;
-  //       for (let i = 0; i < resData.length; ++i) {
-  //         orderList.value[i] = resData[i];
-  //       }
-  //       getOrderItem();
-  //     }
-  //     loading.value = false;
-  //     return;
-  //   }
-  //   const res = await orderGetService(
-  //     search_date.date[0],
-  //     search_date.date[1],
-  //     parseInt(search_date.status)
-  //   );
-  //   const resData = res.data.data;
-  //   if (resData.length > 0) {
-  //     total_page_number.value = resData.length;
-  //     for (let i = 0; i < resData.length; ++i) {
-  //       orderList.value[i] = resData[i];
-  //     }
-  //     getOrderItem();
-  //   }
-  //   loading.value = false;
-};
 
 //新增销售单
 const dialogVisible = ref(false);
@@ -214,7 +161,7 @@ const addorder = () => {
   ];
   formInline.buyer = 0;
   formInline.courier = 0;
-  formInline.orderStatus = '1';
+  formInline.orderStatus = 1;
   formInline.sendPlace = '';
   formInline.totalAmount = 0;
 };
@@ -257,15 +204,14 @@ const jumpTo = () => {
 };
 
 //退货
-const returnVisible = ref(false);
-const refund = async () => {
-  //   console.log(orderList.value[page_index.value - 1]);
-  //   const res = await returnOrderpostService(
-  //     orderList.value[page_index.value - 1]
-  //   );
-  //   returnVisible.value = false;
-  //   getorder();
-};
+const Delete = async () => {
+  await postDeleteOrderAPI(
+    { "orderId": orderId.$state.data }
+  ).then(() => {
+    getOrderItem();
+  loading.value = false;
+  })
+}
 
 //审核
 const checkVisible = ref(false);
@@ -284,10 +230,6 @@ const check = async () => {
     <el-scrollbar>
       <el-container style="display: flex; justify-content: space-between">
         <el-main>
-          <section class="button-box">
-            <div class="button cash" @click="addorder">新增订单</div>
-            <div class="button delete" @click="">删除订单</div>
-          </section>
           <section class="button-box page">
             <div class="button" @click="prev">上一页</div>
             <div class="button" @click="next">下一页</div>
@@ -298,10 +240,10 @@ const check = async () => {
           </section>
           <section class="button-box">
             <div class="button cash" @click="addorder">新增订单</div>
-            <div class="button delete" @click="">删除订单</div>
+            <div class="button delete" @click="Delete">删除订单</div>
             <div class="button delete" @click="updateOrder">更新订单状态</div>
-            <el-input style="width: 100px" placeholder="订单id" clearable />
-             <el-input style="width: 240px" placeholder="更新状态1(已接单)/2(已送达)" clearable />
+            <el-input style="width: 100px" placeholder="订单id" clearable v-model="orderId.data" @click="updateOrder" />
+            <el-input style="width: 240px" placeholder="更新状态1(已接单)/2(已送达)" clearable v-model="Status" />
           </section>
           <section class="order-box">
             <div class="info-wrapper">
