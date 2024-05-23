@@ -4,6 +4,7 @@ import { onMounted, ref, reactive } from "vue";
 import OrderPanel from "@/components/OrderPanel.vue";
 import { useOrderDataStore } from "@/stores/orderData";
 import type { FormInstance } from "element-plus";
+import { getOrderAPI } from "@/api/order";
 
 const { title } = useMenuStore();
 const { formInline, dynamicValidateForm } = useOrderDataStore();
@@ -23,38 +24,43 @@ const total_page_number = ref(0);
 //订单info
 
 const order_info = ref([
-  { label: "编号", value: "-----" },
-  { label: "交易时间", value: "-----" },
+  { label: "买家id", value: "--" },
+  { label: "骑手id", value: "--" },
+  { label: "商家id", value: "--" },
   { label: "总价", value: "---￥" },
-  { label: "状态", value: "---" },
-]); 
+  { label: "订单状态", value: "--" },
+  { label: "下单时间", value: "--" },
+  { label: "送货地址", value: "--" },
+]);
 
 // 表格数据
 interface order {
-  id: number;
-  nameList: string[];
-  numberList: number[];
-  priceList: number[];
-  goodList: string[];
-  totalPrice: number;
-  status: number;
-  time: string;
+  buyer: number
+  courier: number
+  deliveryTime: string
+  merchant: number
+  orderAppraise: string
+  orderDetailResponses: orderItem[]
+  orderStatus: number
+  orderTime: string
+  sendPlace: string
+  totalAmount: number
 }
 
 interface orderItem {
-  name: string;
-  number: number;
-  price: number;
-  goodsCode: string;
+  actualAmount: number
+  goodsName: string
+  goodsNumber: string
+  originAmount: number
 }
 
 const orderList = ref<order[]>([]);
 const tableData = ref<orderItem[]>([]);
 const tableTitle = [
-  { props: "name", label: "货品名称" },
-  { props: "goodsCode", label: "货品编号" },
-  { props: "number", label: "货品数量" },
-  { props: "price", label: "货品单价" },
+  { props: "goodsName", label: "商品品名称" },
+  { props: "goodsNumber", label: "商品编号" },
+  { props: "originAmount", label: "初始价格" },
+  { props: "actualAmount", label: "实付价格" },
 ];
 
 const clean = () => {
@@ -62,16 +68,19 @@ const clean = () => {
   page_index.value = 1;
   total_page_number.value = 0;
   order_info.value = [
-    { label: "编号", value: "-----" },
-    { label: "交易时间", value: "-----" },
+    { label: "买家id", value: "--" },
+    { label: "骑手id", value: "--" },
+    { label: "商家id", value: "--" },
     { label: "总价", value: "---￥" },
-    { label: "状态", value: "---" },
+    { label: "订单状态", value: "--" },
+    { label: "下单时间", value: "--" },
+    { label: "送货地址", value: "--" },
   ];
 };
 
 //条件查询销售单
 
-const order_status = ["未审核", "已审核", "已退货"];
+const order_status = ["已接单", "已送达"];
 
 const getOrderItem = () => {
   if (!orderList.value) {
@@ -80,69 +89,77 @@ const getOrderItem = () => {
   }
   tableData.value = [];
   let order_item = orderList.value[page_index.value - 1];
-  for (let i = 0; i < order_item.nameList.length; ++i) {
-    tableData.value[i] = { name: "", number: 1, price: 1, goodsCode: "" };
-    tableData.value[i].name = order_item.nameList[i];
-    tableData.value[i].number = order_item.numberList[i];
-    tableData.value[i].goodsCode = order_item.goodList[i];
-    tableData.value[i].price = order_item.priceList[i];
+  for (let i = 0; i < order_item.orderDetailResponses.length; ++i) {
+    tableData.value[i] = { goodsName: "", goodsNumber: '0102', actualAmount: 0, originAmount: 0 };
+    tableData.value[i] = order_item.orderDetailResponses[i];
   }
-  order_info.value[0].value = "Or" + order_item.id.toString();
-  order_info.value[1].value = order_item.time.replace("T", " | ");
-  order_info.value[2].value = order_item.totalPrice.toString() + "￥";
-  order_info.value[3].value = order_status[order_item.status];
+  order_info.value[0].value = order_item.buyer.toString();
+  order_info.value[1].value = order_item.courier.toString();
+  order_info.value[2].value = order_item.merchant.toString();
+  order_info.value[3].value = order_item.totalAmount.toString() + "￥";
+  order_info.value[4].value = order_status[order_item.orderStatus];
+  order_info.value[5].value = order_item.orderTime.replace(/[T+]/g, function (match) {
+    switch (match) {
+      case 'T':
+        return ' | ';
+      case '+':
+        return ' | ';
+      default:
+        return match;
+    }
+  });
+  order_info.value[6].value = order_item.sendPlace;
 };
 
 const getorder = async () => {
   loading.value = true;
-//   const res = await allOrderGetService();
-  // const resData = res.data.data;
-  // total_page_number.value = resData.length;
-  // for (let i = 0; i < resData.length; ++i) {
-  //   orderList.value[i] = resData[i];
-  // }
-  // orderList.value.reverse();
-  // getOrderItem();
+  const res = await getOrderAPI();
+  const resData = res.data;
+  total_page_number.value = resData.length;
+  for (let i = 0; i < resData.length; ++i) {
+    orderList.value[i] = resData[i];
+  }
+  getOrderItem();
   loading.value = false;
 }; //获取所有数据
 
 onMounted(() => {
   title.first = "订单管理";
   title.second = "";
-//   getorder();
+  getorder();
 });
 
 const search = async () => {
-//   clean();
-//   loading.value = true;
-//   search_date.date = !search_date.date ? ["", ""] : search_date.date;
-//   if (search_date.status == "") {
-//     const res = await orderGetService(search_date.date[0], search_date.date[1]);
-//     const resData = res.data.data;
-//     if (resData.length > 0) {
-//       total_page_number.value = resData.length;
-//       for (let i = 0; i < resData.length; ++i) {
-//         orderList.value[i] = resData[i];
-//       }
-//       getOrderItem();
-//     }
-//     loading.value = false;
-//     return;
-//   }
-//   const res = await orderGetService(
-//     search_date.date[0],
-//     search_date.date[1],
-//     parseInt(search_date.status)
-//   );
-//   const resData = res.data.data;
-//   if (resData.length > 0) {
-//     total_page_number.value = resData.length;
-//     for (let i = 0; i < resData.length; ++i) {
-//       orderList.value[i] = resData[i];
-//     }
-//     getOrderItem();
-//   }
-//   loading.value = false;
+  //   clean();
+  //   loading.value = true;
+  //   search_date.date = !search_date.date ? ["", ""] : search_date.date;
+  //   if (search_date.status == "") {
+  //     const res = await orderGetService(search_date.date[0], search_date.date[1]);
+  //     const resData = res.data.data;
+  //     if (resData.length > 0) {
+  //       total_page_number.value = resData.length;
+  //       for (let i = 0; i < resData.length; ++i) {
+  //         orderList.value[i] = resData[i];
+  //       }
+  //       getOrderItem();
+  //     }
+  //     loading.value = false;
+  //     return;
+  //   }
+  //   const res = await orderGetService(
+  //     search_date.date[0],
+  //     search_date.date[1],
+  //     parseInt(search_date.status)
+  //   );
+  //   const resData = res.data.data;
+  //   if (resData.length > 0) {
+  //     total_page_number.value = resData.length;
+  //     for (let i = 0; i < resData.length; ++i) {
+  //       orderList.value[i] = resData[i];
+  //     }
+  //     getOrderItem();
+  //   }
+  //   loading.value = false;
 };
 
 //新增销售单
@@ -196,23 +213,23 @@ const jumpTo = () => {
 //退货
 const returnVisible = ref(false);
 const refund = async () => {
-//   console.log(orderList.value[page_index.value - 1]);
-//   const res = await returnOrderpostService(
-//     orderList.value[page_index.value - 1]
-//   );
-//   returnVisible.value = false;
-//   getorder();
+  //   console.log(orderList.value[page_index.value - 1]);
+  //   const res = await returnOrderpostService(
+  //     orderList.value[page_index.value - 1]
+  //   );
+  //   returnVisible.value = false;
+  //   getorder();
 };
 
 //审核
 const checkVisible = ref(false);
 const check = async () => {
-//   console.log(orderList.value[page_index.value - 1]);
-//   const res = await checkOrderpostService(
-//     orderList.value[page_index.value - 1]
-//   );
-//   checkVisible.value = false;
-//   getorder();
+  //   console.log(orderList.value[page_index.value - 1]);
+  //   const res = await checkOrderpostService(
+  //     orderList.value[page_index.value - 1]
+  //   );
+  //   checkVisible.value = false;
+  //   getorder();
 };
 </script>
 
@@ -267,7 +284,7 @@ const check = async () => {
               <div class="total-data">共有{{ total_page_number }}单</div>
             </div>
           </section>
-          <el-dialog v-model="dialogVisible" width="600" draggable >
+          <el-dialog v-model="dialogVisible" width="600" draggable>
             <OrderPanel title="销售单结账进行中" @getvisible="emitsGetvisible" />
           </el-dialog>
           <el-dialog v-model="returnVisible" width="350">
@@ -461,6 +478,7 @@ const check = async () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
         gap: 60px;
 
         .info {
@@ -526,7 +544,7 @@ const check = async () => {
             .total-data {
               margin-right: 15px;
               font-size: 16px;
-              
+
               span {
                 @include font_color("text-100");
               }
