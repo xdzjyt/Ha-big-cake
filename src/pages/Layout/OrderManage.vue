@@ -127,39 +127,6 @@ onMounted(() => {
   getorder();
 });
 
-const search = async () => {
-  //   clean();
-  //   loading.value = true;
-  //   search_date.date = !search_date.date ? ["", ""] : search_date.date;
-  //   if (search_date.status == "") {
-  //     const res = await orderGetService(search_date.date[0], search_date.date[1]);
-  //     const resData = res.data.data;
-  //     if (resData.length > 0) {
-  //       total_page_number.value = resData.length;
-  //       for (let i = 0; i < resData.length; ++i) {
-  //         orderList.value[i] = resData[i];
-  //       }
-  //       getOrderItem();
-  //     }
-  //     loading.value = false;
-  //     return;
-  //   }
-  //   const res = await orderGetService(
-  //     search_date.date[0],
-  //     search_date.date[1],
-  //     parseInt(search_date.status)
-  //   );
-  //   const resData = res.data.data;
-  //   if (resData.length > 0) {
-  //     total_page_number.value = resData.length;
-  //     for (let i = 0; i < resData.length; ++i) {
-  //       orderList.value[i] = resData[i];
-  //     }
-  //     getOrderItem();
-  //   }
-  //   loading.value = false;
-};
-
 //新增销售单
 const dialogVisible = ref(false);
 const addorder = () => {
