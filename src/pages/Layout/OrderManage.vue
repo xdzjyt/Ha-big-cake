@@ -29,8 +29,10 @@ const order_info = ref([
   { label: "商家id", value: "--" },
   { label: "总价", value: "---￥" },
   { label: "订单状态", value: "--" },
+  { label: "配送时间", value: "--" },
   { label: "下单时间", value: "--" },
   { label: "送货地址", value: "--" },
+  { label: "默认好评", value: "--" },
 ]);
 
 // 表格数据
@@ -98,17 +100,10 @@ const getOrderItem = () => {
   order_info.value[2].value = order_item.merchant.toString();
   order_info.value[3].value = order_item.totalAmount.toString() + "￥";
   order_info.value[4].value = order_status[order_item.orderStatus];
-  order_info.value[5].value = order_item.orderTime.replace(/[T+]/g, function (match) {
-    switch (match) {
-      case 'T':
-        return ' | ';
-      case '+':
-        return ' | ';
-      default:
-        return match;
-    }
-  });
-  order_info.value[6].value = order_item.sendPlace;
+  order_info.value[5].value = order_item.deliveryTime ? order_item.deliveryTime.replace(/[T+]/g, ' | ') : '--';
+  order_info.value[6].value = order_item.orderTime ? order_item.orderTime.replace(/[T+]/g, ' | ') : '--';
+  order_info.value[7].value = order_item.sendPlace;
+  order_info.value[8].value = order_item.orderAppraise;
 };
 
 const getorder = async () => {
@@ -249,7 +244,6 @@ const check = async () => {
             <div class="input-box">
               <span>状态</span>
               <el-select v-model="search_date.status" placeholder="请选择" style="width: 100px">
-                <el-option label="未审核" value="0" />
                 <el-option label="已审核" value="1" />
                 <el-option label="已退货" value="2" />
                 <el-option label="全部" value="" />
@@ -263,16 +257,22 @@ const check = async () => {
             </div>
           </section>
           <section class="order-box">
-            <div class="info-box">
-              <div class="info" v-for="item in order_info">
-                <span>{{ item.label }}</span>
-                <div class="data">{{ item.value }}</div>
+            <div class="info-wrapper">
+              <h3>订单详细信息</h3>
+              <div class="info-box">
+                <div class="info" v-for="item in order_info">
+                  <span>{{ item.label }}</span>
+                  <div class="data">{{ item.value }}</div>
+                </div>
               </div>
             </div>
-            <el-table ref="multipleTableRef" :data="tableData" table-layout="auto" v-loading="loading"
-              class="table-box">
-              <el-table-column v-for="item in tableTitle" :prop="item.props" :label="item.label" align="center" />
-            </el-table>
+            <div class="data">
+              <h3>订单商品列表</h3>
+              <el-table ref="multipleTableRef" :data="tableData" table-layout="auto" v-loading="loading"
+                class="table-box">
+                <el-table-column v-for="item in tableTitle" :prop="item.props" :label="item.label" align="center" />
+              </el-table>
+            </div>
           </section>
           <section class="button-box page">
             <div class="button" @click="prev">上一页</div>
@@ -473,80 +473,121 @@ const check = async () => {
       align-items: center;
       padding: 30px 50px 60px 30px;
 
-      .info-box {
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 60px;
 
-        .info {
+      .info-wrapper {
+        border: 2px solid;
+        @include border_color('text-100');
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
+        @include background_color('bg-200');
+        transition: all .3s ease;
+        margin-bottom: 60px;
+
+        &:hover {
+          box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
+          scale: 1.01;
+        }
+
+        h3 {
+          @include font_color('text-100');
+          margin-bottom: 20px;
+          padding: 10px 8px;
+          border-left: 10px solid;
+          @include border_color('accent-200');
+        }
+
+        .info-box {
+          font-size: 20px;
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          @include font_color("text-100");
+          flex-wrap: wrap;
+          gap: 40px;
 
-          span {
-            user-select: none;
-          }
+          .info {
+            display: flex;
+            align-items: center;
+            @include font_color("text-100");
 
-          .data {
-            box-shadow: 10px 10px 10px rgba(49, 61, 68, 0.4);
-            margin-left: 8px;
-            @include background_color("bg-300");
-            padding: 5px 12px;
-            border-radius: 12px;
+            span {
+              white-space: nowrap;
+              user-select: none;
+            }
+
+            .data {
+              box-shadow: 10px 10px 10px rgba(49, 61, 68, 0.4);
+              margin-left: 8px;
+              @include background_color("bg-300");
+              padding: 5px 12px;
+              border-radius: 12px;
+              min-width: 100px;
+              text-align: center;
+            }
           }
         }
       }
 
-      .table-box {
-        position: relative;
-        box-shadow: -2px -2px 5px rgba(49, 61, 68, 0.5);
-        border-top: 6px solid;
-        @include border_color("accent-200");
+      .data {
+        width: 100%;
+        height: 100%;
 
-        .warning-box {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          justify-content: space-between;
-          padding: 10px;
-
-          .content {
-            font-size: 20px;
-            font-weight: 500;
-            text-align: center;
-          }
-
-          .button-box {
-            display: flex;
-            justify-content: space-between;
-          }
+        h3 {
+          @include font_color('text-100');
+          margin-bottom: 20px;
+          padding: 10px 8px;
+          border-left: 10px solid;
+          @include border_color('accent-200');
         }
 
-        .page-box {
-          margin-top: 25px;
-          padding: 0 10px 5px 10px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          @include font_color("text-100");
+        .table-box {
+          position: relative;
+          box-shadow: -2px -2px 5px rgba(49, 61, 68, 0.5);
+          border-top: 6px solid;
+          @include border_color("accent-200");
 
-          .data-select span {
-            margin-right: 5px;
+          .warning-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: space-between;
+            padding: 10px;
+
+            .content {
+              font-size: 20px;
+              font-weight: 500;
+              text-align: center;
+            }
+
+            .button-box {
+              display: flex;
+              justify-content: space-between;
+            }
           }
 
-          .wrapper {
+          .page-box {
+            margin-top: 25px;
+            padding: 0 10px 5px 10px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            @include font_color("text-100");
 
-            .total-data {
-              margin-right: 15px;
-              font-size: 16px;
+            .data-select span {
+              margin-right: 5px;
+            }
 
-              span {
-                @include font_color("text-100");
+            .wrapper {
+              display: flex;
+              align-items: center;
+
+              .total-data {
+                margin-right: 15px;
+                font-size: 16px;
+
+                span {
+                  @include font_color("text-100");
+                }
               }
             }
           }
