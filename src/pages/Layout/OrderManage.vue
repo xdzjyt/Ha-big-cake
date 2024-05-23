@@ -27,7 +27,7 @@ const order_info = ref([
   { label: "交易时间", value: "-----" },
   { label: "总价", value: "---￥" },
   { label: "状态", value: "---" },
-]);
+]); 
 
 // 表格数据
 interface order {
@@ -94,16 +94,16 @@ const getOrderItem = () => {
 };
 
 const getorder = async () => {
-//   loading.value = true;
-// //   const res = await allOrderGetService();
-//   const resData = res.data.data;
-//   total_page_number.value = resData.length;
-//   for (let i = 0; i < resData.length; ++i) {
-//     orderList.value[i] = resData[i];
-//   }
-//   orderList.value.reverse();
-//   getOrderItem();
-//   loading.value = false;
+  loading.value = true;
+//   const res = await allOrderGetService();
+  // const resData = res.data.data;
+  // total_page_number.value = resData.length;
+  // for (let i = 0; i < resData.length; ++i) {
+  //   orderList.value[i] = resData[i];
+  // }
+  // orderList.value.reverse();
+  // getOrderItem();
+  loading.value = false;
 }; //获取所有数据
 
 onMounted(() => {

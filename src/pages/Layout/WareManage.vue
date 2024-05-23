@@ -414,7 +414,6 @@ onMounted(() => {
         transition: all .3s ease;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
 
         &:hover {
           box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);

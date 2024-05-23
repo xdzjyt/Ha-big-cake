@@ -2,37 +2,45 @@ import { ref, reactive } from "vue"
 import { defineStore } from "pinia"
 
 interface DomainItem {
-  key: number
-  value: string
-  number: number
+  actualAmount: number
+  goodsName: string
+  goodsNumber: string
+  originAmount: number
 }
 
 export const useOrderDataStore = defineStore('order', () => {
   const formInline = ref<{
-    id: string
-    goodList: string[]
-    numberList: number[]
-    priceList: number[]
-    totalPrice: number
-    status: number
-    time: string
+    buyer: number
+    courier: number
+    deliveryTime: string
+    merchant: number
+    orderAppraise: string
+    orderDatilResponses: DomainItem[]
+    orderStatus: number
+    orderTime: string
+    sendPlace: string
+    totalAmount: number
   }>({
-    id: '',
-    goodList: [],
-    numberList: [],
-    priceList: [],
-    totalPrice: 0,
-    status: 0,
-    time: '',
+    buyer: 0,
+    courier: 0,
+    deliveryTime: '2024-01-01',
+    merchant: 0,
+    orderAppraise: 'very good!',
+    orderDatilResponses: [],
+    orderStatus: 0,
+    orderTime: '2024-01-01',
+    sendPlace: 'weihai',
+    totalAmount: 125
   });
   const dynamicValidateForm = reactive<{
     domains: DomainItem[]
   }>({
     domains: [
       {
-        key: 1,
-        value: '',
-        number: 1,
+        actualAmount: 35,
+        goodsName: '乐乐',
+        goodsNumber: '0102',
+        originAmount: 40,
       },
     ],
   });
