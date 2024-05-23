@@ -25,29 +25,36 @@ const total_page_number = ref(0);
 //订单info
 
 const order_info = ref([
-  { label: "编号", value: "-----" },
-  { label: "交易时间", value: "-----" },
+  { label: "买家id", value: "--" },
+  { label: "骑手id", value: "--" },
+  { label: "商家id", value: "--" },
   { label: "总价", value: "---￥" },
-  { label: "状态", value: "---" },
-]); 
+  { label: "订单状态", value: "--" },
+  { label: "配送时间", value: "--" },
+  { label: "下单时间", value: "--" },
+  { label: "送货地址", value: "--" },
+  { label: "默认好评", value: "--" },
+]);
 
 // 表格数据
 interface order {
-  id: number;
-  nameList: string[];
-  numberList: number[];
-  priceList: number[];
-  goodList: string[];
-  totalPrice: number;
-  status: number;
-  time: string;
+  buyer: number
+  courier: number
+  deliveryTime: string
+  merchant: number
+  orderAppraise: string
+  orderDetailResponses: orderItem[]
+  orderStatus: number
+  orderTime: string
+  sendPlace: string
+  totalAmount: number
 }
 
 interface orderItem {
-  name: string;
-  number: number;
-  price: number;
-  goodsCode: string;
+  actualAmount: number
+  goodsName: string
+  goodsNumber: string
+  originAmount: number
 }
 
 const orderList = ref<order[]>([]);
@@ -64,11 +71,40 @@ const clean = () => {
   page_index.value = 1;
   total_page_number.value = 0;
   order_info.value = [
-    { label: "编号", value: "-----" },
-    { label: "交易时间", value: "-----" },
+    { label: "买家id", value: "--" },
+    { label: "骑手id", value: "--" },
+    { label: "商家id", value: "--" },
     { label: "总价", value: "---￥" },
-    { label: "状态", value: "---" },
+    { label: "订单状态", value: "--" },
+    { label: "下单时间", value: "--" },
+    { label: "送货地址", value: "--" },
   ];
+};
+//新增销售单
+const dialogVisible = ref(false);
+const addorder = async()=> {
+  await postAddOrderAPI(
+   { "buyer": 0,
+  "courier": 0,
+  "orderGoodsDetailRequests": [
+    {
+      "actualAmount": 0,
+      "goodsName": "",
+      "goodsNumber": "",
+      "originAmount": 0
+    }
+  ],
+  "orderStatus": 0,
+  "sendPlace": "",
+  "totalAmount": 0}
+  ).then(() => {
+    console.log("新增成功");
+  });
+};
+
+const emitsGetvisible = (data: boolean) => {
+  dialogVisible.value = data;
+  getorder();
 };
 //新增销售单
 const dialogVisible = ref(false);
@@ -99,7 +135,7 @@ const emitsGetvisible = (data: boolean) => {
 
 //条件查询销售单
 
-const order_status = ["未审核", "已审核", "已退货"];
+const order_status = ["已接单", "已送达"];
 
 const getOrderItem = () => {
   if (!orderList.value) {
@@ -108,69 +144,70 @@ const getOrderItem = () => {
   }
   tableData.value = [];
   let order_item = orderList.value[page_index.value - 1];
-  for (let i = 0; i < order_item.nameList.length; ++i) {
-    tableData.value[i] = { name: "", number: 1, price: 1, goodsCode: "" };
-    tableData.value[i].name = order_item.nameList[i];
-    tableData.value[i].number = order_item.numberList[i];
-    tableData.value[i].goodsCode = order_item.goodList[i];
-    tableData.value[i].price = order_item.priceList[i];
+  for (let i = 0; i < order_item.orderDetailResponses.length; ++i) {
+    tableData.value[i] = { goodsName: "", goodsNumber: '0102', actualAmount: 0, originAmount: 0 };
+    tableData.value[i] = order_item.orderDetailResponses[i];
   }
-  order_info.value[0].value = "Or" + order_item.id.toString();
-  order_info.value[1].value = order_item.time.replace("T", " | ");
-  order_info.value[2].value = order_item.totalPrice.toString() + "￥";
-  order_info.value[3].value = order_status[order_item.status];
+  order_info.value[0].value = order_item.buyer.toString();
+  order_info.value[1].value = order_item.courier.toString();
+  order_info.value[2].value = order_item.merchant.toString();
+  order_info.value[3].value = order_item.totalAmount.toString() + "￥";
+  order_info.value[4].value = order_status[order_item.orderStatus];
+  order_info.value[5].value = order_item.deliveryTime ? order_item.deliveryTime.replace(/[T+]/g, ' | ') : '--';
+  order_info.value[6].value = order_item.orderTime ? order_item.orderTime.replace(/[T+]/g, ' | ') : '--';
+  order_info.value[7].value = order_item.sendPlace;
+  order_info.value[8].value = order_item.orderAppraise;
 };
 
 const getorder = async () => {
   loading.value = true;
-//   const res = await allOrderGetService();
-  // const resData = res.data.data;
-  // total_page_number.value = resData.length;
-  // for (let i = 0; i < resData.length; ++i) {
-  //   orderList.value[i] = resData[i];
-  // }
-  // orderList.value.reverse();
-  // getOrderItem();
+  const res = await getOrderAPI();
+  const resData = res.data;
+  total_page_number.value = resData.length;
+  for (let i = 0; i < resData.length; ++i) {
+    orderList.value[i] = resData[i];
+  }
+  getOrderItem();
   loading.value = false;
 }; //获取所有数据
 
 onMounted(() => {
   title.first = "订单管理";
   title.second = "";
-//   getorder();
+  getorder();
 });
 
 const search = async () => {
-//   clean();
-//   loading.value = true;
-//   search_date.date = !search_date.date ? ["", ""] : search_date.date;
-//   if (search_date.status == "") {
-//     const res = await orderGetService(search_date.date[0], search_date.date[1]);
-//     const resData = res.data.data;
-//     if (resData.length > 0) {
-//       total_page_number.value = resData.length;
-//       for (let i = 0; i < resData.length; ++i) {
-//         orderList.value[i] = resData[i];
-//       }
-//       getOrderItem();
-//     }
-//     loading.value = false;
-//     return;
-//   }
-//   const res = await orderGetService(
-//     search_date.date[0],
-//     search_date.date[1],
-//     parseInt(search_date.status)
-//   );
-//   const resData = res.data.data;
-//   if (resData.length > 0) {
-//     total_page_number.value = resData.length;
-//     for (let i = 0; i < resData.length; ++i) {
-//       orderList.value[i] = resData[i];
-//     }
-//     getOrderItem();
-//   }
-//   loading.value = false;
+  //   clean();
+  //   loading.value = true;
+  //   search_date.date = !search_date.date ? ["", ""] : search_date.date;
+  //   if (search_date.status == "") {
+  //     const res = await orderGetService(search_date.date[0], search_date.date[1]);
+  //     const resData = res.data.data;
+  //     if (resData.length > 0) {
+  //       total_page_number.value = resData.length;
+  //       for (let i = 0; i < resData.length; ++i) {
+  //         orderList.value[i] = resData[i];
+  //       }
+  //       getOrderItem();
+  //     }
+  //     loading.value = false;
+  //     return;
+  //   }
+  //   const res = await orderGetService(
+  //     search_date.date[0],
+  //     search_date.date[1],
+  //     parseInt(search_date.status)
+  //   );
+  //   const resData = res.data.data;
+  //   if (resData.length > 0) {
+  //     total_page_number.value = resData.length;
+  //     for (let i = 0; i < resData.length; ++i) {
+  //       orderList.value[i] = resData[i];
+  //     }
+  //     getOrderItem();
+  //   }
+  //   loading.value = false;
 };
 
 
@@ -210,23 +247,23 @@ const jumpTo = () => {
 //退货
 const returnVisible = ref(false);
 const refund = async () => {
-//   console.log(orderList.value[page_index.value - 1]);
-//   const res = await returnOrderpostService(
-//     orderList.value[page_index.value - 1]
-//   );
-//   returnVisible.value = false;
-//   getorder();
+  //   console.log(orderList.value[page_index.value - 1]);
+  //   const res = await returnOrderpostService(
+  //     orderList.value[page_index.value - 1]
+  //   );
+  //   returnVisible.value = false;
+  //   getorder();
 };
 
 //审核
 const checkVisible = ref(false);
 const check = async () => {
-//   console.log(orderList.value[page_index.value - 1]);
-//   const res = await checkOrderpostService(
-//     orderList.value[page_index.value - 1]
-//   );
-//   checkVisible.value = false;
-//   getorder();
+  //   console.log(orderList.value[page_index.value - 1]);
+  //   const res = await checkOrderpostService(
+  //     orderList.value[page_index.value - 1]
+  //   );
+  //   checkVisible.value = false;
+  //   getorder();
 };
 </script>
 
@@ -235,53 +272,37 @@ const check = async () => {
     <el-scrollbar>
       <el-container style="display: flex; justify-content: space-between">
         <el-main>
-          <form class="input-form">
-            <div class="input-box flex">
-              <span>时间范围</span>
-              <div class="block">
-                <el-date-picker v-model="search_date.date" type="daterange" range-separator="-" start-placeholder="最早时间"
-                  end-placeholder="最晚时间" unlink-panels="true" style="width: 240px" value-format="YYYY-MM-DD" />
-              </div>
-            </div>
-            <div class="input-box">
-              <span>状态</span>
-              <el-select v-model="search_date.status" placeholder="请选择" style="width: 100px">
-                <el-option label="未审核" value="0" />
-                <el-option label="已审核" value="1" />
-                <el-option label="已退货" value="2" />
-                <el-option label="全部" value="" />
-              </el-select>
-            </div>
-            <div class="button" @click="search">查询</div>
-          </form>
-          <section class="button-box">
-            <div class="button cash" @click="addorder">
-              进行结账(新增销售单)
-            </div>
-          </section>
-          <section class="order-box">
-            <div class="info-box">
-              <div class="info" v-for="item in order_info">
-                <span>{{ item.label }}</span>
-                <div class="data">{{ item.value }}</div>
-              </div>
-            </div>
-            <el-table ref="multipleTableRef" :data="tableData" table-layout="auto" v-loading="loading"
-              class="table-box">
-              <el-table-column v-for="item in tableTitle" :prop="item.props" :label="item.label" align="center" />
-            </el-table>
-          </section>
           <section class="button-box page">
             <div class="button" @click="prev">上一页</div>
-            <div class="button refund" @click="returnVisible = true">退货</div>
-            <div class="button refund" @click="checkVisible = true">审核</div>
             <div class="button" @click="next">下一页</div>
             <div class="wrapper">
               <span>当前页面：</span><input class="page-index" type="number" @blur="jumpTo" v-model="page_index" />
               <div class="total-data">共有{{ total_page_number }}单</div>
             </div>
           </section>
-          <el-dialog v-model="dialogVisible" width="600" draggable >
+          <section class="button-box">
+            <div class="button cash" @click="addorder">新增订单</div>
+            <div class="button delete" @click="">删除订单</div>
+          </section>
+          <section class="order-box">
+            <div class="info-wrapper">
+              <h3>订单详细信息</h3>
+              <div class="info-box">
+                <div class="info" v-for="item in order_info">
+                  <span>{{ item.label }}</span>
+                  <div class="data">{{ item.value }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="data">
+              <h3>订单商品列表</h3>
+              <el-table ref="multipleTableRef" :data="tableData" table-layout="auto" v-loading="loading"
+                class="table-box">
+                <el-table-column v-for="item in tableTitle" :prop="item.props" :label="item.label" align="center" />
+              </el-table>
+            </div>
+          </section>
+          <el-dialog v-model="dialogVisible" width="600" draggable>
             <OrderPanel title="销售单结账进行中" @getvisible="emitsGetvisible" />
           </el-dialog>
           <el-dialog v-model="returnVisible" width="350">
@@ -365,14 +386,15 @@ const check = async () => {
       font-size: 16px;
       border-radius: 5px;
       transition: all 0.3s ease;
-      margin-right: 80px;
       box-shadow: 0 0 4px rgba(49, 61, 68, 0.5);
       text-align: center;
       line-height: 35px;
 
-      &.refund,
       &.cash {
-        @include background_color("primary-300");
+        @include background_color("primary-200");
+      }
+      &.delete{
+        background-color: rgb(241, 66, 66)!important;
       }
 
       &:hover {
@@ -385,40 +407,20 @@ const check = async () => {
       }
     }
 
-    .input-form {
-      padding: 15px 25px;
-      border-radius: 12px;
-      box-shadow: inset 0 0 10px rgba(49, 61, 68, 0.8);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      @include background-color("bg-200");
-
-      .input-box {
-        @include font_color("text-100");
-
-        span {
-          margin-right: 10px;
-          font-size: 16px;
-        }
-
-        &.flex {
-          display: flex;
-          align-items: center;
-        }
-      }
-    }
-
     .button-box {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
       position: relative;
+      gap: 80px;
+      padding: 20px 8%;
 
       &.page {
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10%;
+        border-bottom: 5px solid;
+        @include border_color('accent-100');
+        box-shadow: 0 5px 5px rgba(49, 61, 68, .4);
+        margin-bottom: 50px;
+
 
         .wrapper {
           display: flex;
@@ -426,7 +428,7 @@ const check = async () => {
           gap: 10px;
           box-shadow: inset 0 0 10px rgba(49, 61, 68, 0.8);
           border-radius: 12px;
-          padding: 10px;
+          padding: 20px;
 
           span {
             @include font_color("text-100");
@@ -438,9 +440,10 @@ const check = async () => {
             box-shadow: 0 0 10px rgba(49, 61, 68, 0.8);
             padding: 8px 10px;
             border-radius: 12px;
-            @include background_color("primary-200");
+            @include background_color("primary-300");
             white-space: nowrap;
             color: white;
+            user-select: none;
           }
 
           .page-index {
@@ -470,79 +473,121 @@ const check = async () => {
       align-items: center;
       padding: 30px 50px 60px 30px;
 
-      .info-box {
-        font-size: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 60px;
 
-        .info {
+      .info-wrapper {
+        border: 2px solid;
+        @include border_color('text-100');
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 10px 10px 10px rgba(49, 61, 68, .4);
+        @include background_color('bg-200');
+        transition: all .3s ease;
+        margin-bottom: 60px;
+
+        &:hover {
+          box-shadow: inset 0 0 10px rgba(49, 61, 68, .6);
+          scale: 1.01;
+        }
+
+        h3 {
+          @include font_color('text-100');
+          margin-bottom: 20px;
+          padding: 10px 8px;
+          border-left: 10px solid;
+          @include border_color('accent-200');
+        }
+
+        .info-box {
+          font-size: 20px;
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          @include font_color("text-100");
+          flex-wrap: wrap;
+          gap: 40px;
 
-          span {
-            user-select: none;
-          }
+          .info {
+            display: flex;
+            align-items: center;
+            @include font_color("text-100");
 
-          .data {
-            box-shadow: 10px 10px 10px rgba(49, 61, 68, 0.4);
-            margin-left: 8px;
-            @include background_color("bg-300");
-            padding: 5px 12px;
-            border-radius: 12px;
+            span {
+              white-space: nowrap;
+              user-select: none;
+            }
+
+            .data {
+              box-shadow: 10px 10px 10px rgba(49, 61, 68, 0.4);
+              margin-left: 8px;
+              @include background_color("bg-300");
+              padding: 5px 12px;
+              border-radius: 12px;
+              min-width: 100px;
+              text-align: center;
+            }
           }
         }
       }
 
-      .table-box {
-        position: relative;
-        box-shadow: -2px -2px 5px rgba(49, 61, 68, 0.5);
-        border-top: 6px solid;
-        @include border_color("accent-200");
+      .data {
+        width: 100%;
+        height: 100%;
 
-        .warning-box {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          justify-content: space-between;
-          padding: 10px;
-
-          .content {
-            font-size: 20px;
-            font-weight: 500;
-            text-align: center;
-          }
-
-          .button-box {
-            display: flex;
-            justify-content: space-between;
-          }
+        h3 {
+          @include font_color('text-100');
+          margin-bottom: 20px;
+          padding: 10px 8px;
+          border-left: 10px solid;
+          @include border_color('accent-200');
         }
 
-        .page-box {
-          margin-top: 25px;
-          padding: 0 10px 5px 10px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          @include font_color("text-100");
+        .table-box {
+          position: relative;
+          box-shadow: -2px -2px 5px rgba(49, 61, 68, 0.5);
+          border-top: 6px solid;
+          @include border_color("accent-200");
 
-          .data-select span {
-            margin-right: 5px;
+          .warning-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: space-between;
+            padding: 10px;
+
+            .content {
+              font-size: 20px;
+              font-weight: 500;
+              text-align: center;
+            }
+
+            .button-box {
+              display: flex;
+              justify-content: space-between;
+            }
           }
 
-          .wrapper {
+          .page-box {
+            margin-top: 25px;
+            padding: 0 10px 5px 10px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            @include font_color("text-100");
 
-            .total-data {
-              margin-right: 15px;
-              font-size: 16px;
-              
-              span {
-                @include font_color("text-100");
+            .data-select span {
+              margin-right: 5px;
+            }
+
+            .wrapper {
+              display: flex;
+              align-items: center;
+
+              .total-data {
+                margin-right: 15px;
+                font-size: 16px;
+
+                span {
+                  @include font_color("text-100");
+                }
               }
             }
           }

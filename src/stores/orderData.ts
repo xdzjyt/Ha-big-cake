@@ -15,7 +15,7 @@ export const useOrderDataStore = defineStore('order', () => {
     deliveryTime: string
     merchant: number
     orderAppraise: string
-    orderDatilResponses: DomainItem[]
+    orderDetailResponses: DomainItem[]
     orderStatus: number
     orderTime: string
     sendPlace: string
@@ -26,7 +26,7 @@ export const useOrderDataStore = defineStore('order', () => {
     deliveryTime: '2024-01-01',
     merchant: 0,
     orderAppraise: 'very good!',
-    orderDatilResponses: [],
+    orderDetailResponses: [],
     orderStatus: 0,
     orderTime: '2024-01-01',
     sendPlace: 'weihai',
