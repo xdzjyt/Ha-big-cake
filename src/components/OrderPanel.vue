@@ -2,6 +2,7 @@
 import { ref, reactive } from "vue";
 import { type FormInstance } from "element-plus";
 import { useOrderDataStore } from "@/stores/orderData";
+import { postAddOrderAPI } from "@/api/order";
 
 const { formInline, dynamicValidateForm } = useOrderDataStore();
 
@@ -22,9 +23,19 @@ function debounce(func, delay) {
 }
 
 interface DomainItem {
-  key: number;
-  value: string;
-  number: number;
+  actualAmount: number
+  goodsName: string
+  goodsNumber: string
+  originAmount: number
+}
+
+interface postItem {
+  buyer: number
+  courier: number
+  orderGoodsDetailRequests: DomainItem[]
+  orderStatus: number
+  sendPlace: string
+  totalAmount: number
 }
 
 const removeDomain = (item: DomainItem) => {
@@ -35,47 +46,45 @@ const removeDomain = (item: DomainItem) => {
 };
 
 const addDomain = () => {
-  
+
   dynamicValidateForm.domains.push({
     key: Date.now(),
-    value: "",
-    number: 1,
+    actualAmount: 0,
+    goodsName: '',
+    goodsNumber: '',
+    originAmount: 0,
   });
 };
 
 const emits = defineEmits(["getvisible"]);
 
-const loading = ref(false);
-
 const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
   if (dynamicValidateForm.domains.length < 1) {
-    ElMessage.warning("没有任何货品呢");
+    ElMessage.warning("没有任何商品呢");
     return;
   }
-  loading.value = true;
-  for (let i = 0; i < dynamicValidateForm.domains.length; ++i) {
-    formInline.goodList[i] = dynamicValidateForm.domains[i].value;
-    formInline.numberList[i] = dynamicValidateForm.domains[i].number;
-  }
-
-//   await saveOrderpostService(formInline).then(()=>{
-//     ElMessage.success('新增成功！');
-//   }).catch(()=>{
-//     ElMessage.error('新增失败！');
-//   });
-  loading.value = false;
+  formInline.orderDetailResponses = dynamicValidateForm.domains;
+  formInline.orderStatus = parseInt(formInline.orderStatus.toString());
+  const postData:postItem = {};
+  postData.buyer = formInline.buyer;
+  postData.courier = formInline.courier;
+  postData.orderStatus = formInline.orderStatus;
+  postData.totalAmount = formInline.totalAmount;
+  postData.sendPlace = formInline.sendPlace;
+  postData.orderGoodsDetailRequests = formInline.orderDetailResponses;
+  
+  await postAddOrderAPI(postData).then(() => {
+    ElMessage.success('新增成功！');
+  }).catch(() => {
+    ElMessage.error('新增失败！');
+  });
   emits("getvisible", false);
-
 };
 
 // 使用 debounce 函数创建一个防抖版本的 submit 函数
-const debouncedSubmit = debounce(submitForm, 5000); // 设置延迟时间为 5000秒
+const debouncedSubmit = debounce(submitForm, 1000); // 设置延迟时间为 5000秒
 
 const resetForm = (formEl: FormInstance | undefined) => {
-  dynamicValidateForm.domains.forEach((element) => {
-    element.number = 1;
-  });
   if (!formEl) return;
   formEl.resetFields();
 };
@@ -86,27 +95,60 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="background"  :v-loading="loading">
+  <div class="background">
     <div class="title">
       <h3>{{ props.title }}</h3>
     </div>
+    <el-form :model="formInline" label-width="auto" style="max-width: 600px" label-position="right" class="info-form">
+      <section>
+        <el-form-item label="买家id" prop="buyer">
+          <el-input-number v-model="formInline.buyer" placeholder="请输入买家id" clearable />
+        </el-form-item>
+        <el-form-item label="骑手id" prop="courier">
+          <el-input-number v-model="formInline.courier" placeholder="请输入骑手id" clearable />
+        </el-form-item>
+      </section>
+      <section>
+        <el-form-item label="订单状态" prop="orderStatus">
+          <el-select v-model="formInline.orderStatus" placeholder="请选择" clearable style="width: 120px;">
+            <el-option label="已结单" value=1 />
+            <el-option label="已送达" value=2 />
+          </el-select>
+        </el-form-item>
+      </section>
+      <section>
+        <el-form-item label="送达地点" prop="sendPlace">
+          <el-input v-model="formInline.sendPlace" placeholder="请输入送达地点" clearable />
+        </el-form-item>
+        <el-form-item label="总金额" prop="totalAmount">
+          <el-input-number v-model="formInline.totalAmount" placeholder="请输入总金额" clearable />
+        </el-form-item>
+      </section>
+    </el-form>
     <el-form ref="formRef" style="max-width: 600px" :model="dynamicValidateForm" label-width="auto"
       class="demo-dynamic">
-      <el-form-item v-for="(domain, index) in dynamicValidateForm.domains" :key="domain.key" :label="'货品' + (index + 1)"
-        :prop="'domains.' + index + '.value'" :inline="true" class="wareItem">
-        <span>货品编号</span><el-input v-model="domain.value" style="width: 120px" />
-        <span>交易数量</span><el-input-number v-model="domain.number" :min="1" :max="1000" style="width: 90px"
-          size="small" />
-        <el-button @click.prevent="removeDomain(domain)" style="border-radius: 50%; padding: 8px; margin-left: 15px"><i
-            class="bx bx-x"></i></el-button>
+      <el-form-item v-for="(domain, index) in dynamicValidateForm.domains" :label="'商品' + (index + 1)"
+        :prop="'domains.' + index + '.value'" class="wareItem">
+        <section>
+          <span>商品编号</span><el-input v-model="domain.goodsNumber" style="width: 120px" />
+          <span>商品名称</span><el-input v-model="domain.goodsName" style="width: 90px" />
+        </section>
+        <section>
+          <span>折扣价格</span><el-input-number v-model="domain.actualAmount" :min="1" :max="1000" style="width: 90px"
+            size="small" />
+          <span>初始价格</span><el-input-number v-model="domain.originAmount" :min="1" :max="1000" style="width: 90px"
+            size="small" />
+          <el-button @click.prevent="removeDomain(domain)"
+            style="border-radius: 50%; padding: 8px; margin-left: 15px"><i class="bx bx-x"></i></el-button>
+        </section>
       </el-form-item>
       <el-form-item>
         <div class="button-box">
-          <div class="button submit" @click="debouncedSubmit(formRef)">
+          <div class="button submit" @click="debouncedSubmit()">
             收银结账
           </div>
-          <div class="button" @click="addDomain">新增货品项</div>
-          <div class="button" @click="resetForm(formRef)">撤销所有记录</div>
+          <div class="button" @click="addDomain">新增商品项</div>
+          <div class="button" @click="resetForm(formRef)">撤销所有商品记录</div>
         </div>
       </el-form-item>
     </el-form>
@@ -130,6 +172,21 @@ const props = defineProps({
     @include font_color("accent-200");
     font-weight: 600;
     font-size: 16px;
+  }
+
+  section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .info-form {
+    padding: 10px 5px;
+    margin-bottom: 25px;
+    border-bottom: 5px solid;
+    @include border_color("primary-300");
   }
 
   .el-form-item.wareItem {

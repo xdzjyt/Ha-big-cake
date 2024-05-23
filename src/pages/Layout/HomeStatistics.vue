@@ -123,10 +123,10 @@ const report_list = ref([
 
 //员工list
 const emp_list = ref([
-   { id: 1, name: '张沣睿', avater: '@/assets/images/fulilian.jpeg', identity: '店员' },
-   { id: 2, name: '刘烨', avater: '', identity: '店长' },
-   { id: 3, name: '朱未', avater: '', identity: '副店长' },
-   { id: 4, name: '叼爷', avater: '', identity: '配送员' },
+   { id: 1, name: '张furry', avater: '@/assets/images/fulilian.jpeg', identity: '伟大无需多言' },
+   { id: 2, name: '刘sir', avater: '', identity: '计院男神' },
+   { id: 3, name: '朱哥', avater: '', identity: '霸气外露' },
+   { id: 4, name: '叼爷', avater: '', identity: '门面担当' },
 ]);
 
 
