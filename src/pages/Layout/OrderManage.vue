@@ -233,28 +233,17 @@ const check = async () => {
     <el-scrollbar>
       <el-container style="display: flex; justify-content: space-between">
         <el-main>
-          <form class="input-form">
-            <div class="input-box flex">
-              <span>时间范围</span>
-              <div class="block">
-                <el-date-picker v-model="search_date.date" type="daterange" range-separator="-" start-placeholder="最早时间"
-                  end-placeholder="最晚时间" unlink-panels="true" style="width: 240px" value-format="YYYY-MM-DD" />
-              </div>
+          <section class="button-box page">
+            <div class="button" @click="prev">上一页</div>
+            <div class="button" @click="next">下一页</div>
+            <div class="wrapper">
+              <span>当前页面：</span><input class="page-index" type="number" @blur="jumpTo" v-model="page_index" />
+              <div class="total-data">共有{{ total_page_number }}单</div>
             </div>
-            <div class="input-box">
-              <span>状态</span>
-              <el-select v-model="search_date.status" placeholder="请选择" style="width: 100px">
-                <el-option label="已审核" value="1" />
-                <el-option label="已退货" value="2" />
-                <el-option label="全部" value="" />
-              </el-select>
-            </div>
-            <div class="button" @click="search">查询</div>
-          </form>
+          </section>
           <section class="button-box">
-            <div class="button cash" @click="addorder">
-              进行结账(新增销售单)
-            </div>
+            <div class="button cash" @click="addorder">新增订单</div>
+            <div class="button delete" @click="">删除订单</div>
           </section>
           <section class="order-box">
             <div class="info-wrapper">
@@ -272,16 +261,6 @@ const check = async () => {
                 class="table-box">
                 <el-table-column v-for="item in tableTitle" :prop="item.props" :label="item.label" align="center" />
               </el-table>
-            </div>
-          </section>
-          <section class="button-box page">
-            <div class="button" @click="prev">上一页</div>
-            <div class="button refund" @click="returnVisible = true">退货</div>
-            <div class="button refund" @click="checkVisible = true">审核</div>
-            <div class="button" @click="next">下一页</div>
-            <div class="wrapper">
-              <span>当前页面：</span><input class="page-index" type="number" @blur="jumpTo" v-model="page_index" />
-              <div class="total-data">共有{{ total_page_number }}单</div>
             </div>
           </section>
           <el-dialog v-model="dialogVisible" width="600" draggable>
@@ -368,14 +347,15 @@ const check = async () => {
       font-size: 16px;
       border-radius: 5px;
       transition: all 0.3s ease;
-      margin-right: 80px;
       box-shadow: 0 0 4px rgba(49, 61, 68, 0.5);
       text-align: center;
       line-height: 35px;
 
-      &.refund,
       &.cash {
-        @include background_color("primary-300");
+        @include background_color("primary-200");
+      }
+      &.delete{
+        background-color: rgb(241, 66, 66)!important;
       }
 
       &:hover {
@@ -388,40 +368,20 @@ const check = async () => {
       }
     }
 
-    .input-form {
-      padding: 15px 25px;
-      border-radius: 12px;
-      box-shadow: inset 0 0 10px rgba(49, 61, 68, 0.8);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      @include background-color("bg-200");
-
-      .input-box {
-        @include font_color("text-100");
-
-        span {
-          margin-right: 10px;
-          font-size: 16px;
-        }
-
-        &.flex {
-          display: flex;
-          align-items: center;
-        }
-      }
-    }
-
     .button-box {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
       position: relative;
+      gap: 80px;
+      padding: 20px 8%;
 
       &.page {
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10%;
+        border-bottom: 5px solid;
+        @include border_color('accent-100');
+        box-shadow: 0 5px 5px rgba(49, 61, 68, .4);
+        margin-bottom: 50px;
+
 
         .wrapper {
           display: flex;
@@ -429,7 +389,7 @@ const check = async () => {
           gap: 10px;
           box-shadow: inset 0 0 10px rgba(49, 61, 68, 0.8);
           border-radius: 12px;
-          padding: 10px;
+          padding: 20px;
 
           span {
             @include font_color("text-100");
@@ -441,9 +401,10 @@ const check = async () => {
             box-shadow: 0 0 10px rgba(49, 61, 68, 0.8);
             padding: 8px 10px;
             border-radius: 12px;
-            @include background_color("primary-200");
+            @include background_color("primary-300");
             white-space: nowrap;
             color: white;
+            user-select: none;
           }
 
           .page-index {
