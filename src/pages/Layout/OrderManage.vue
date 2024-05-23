@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import {getOrderAPI,postDeleteOrderAPI,postAddOrderAPI,postUpdataOrderAPI} from "@/api/order";
 import { useMenuStore } from "@/stores/menuData";
 import { onMounted, ref, reactive } from "vue";
 import OrderPanel from "@/components/OrderPanel.vue";
 import { useOrderDataStore } from "@/stores/orderData";
 import type { FormInstance } from "element-plus";
+import { ElMessage } from "element-plus";
 
 const { title } = useMenuStore();
 const { formInline, dynamicValidateForm } = useOrderDataStore();
@@ -53,8 +55,8 @@ const tableData = ref<orderItem[]>([]);
 const tableTitle = [
   { props: "name", label: "货品名称" },
   { props: "goodsCode", label: "货品编号" },
-  { props: "number", label: "货品数量" },
-  { props: "price", label: "货品单价" },
+  { props: "number", label: "货品原价" },
+  { props: "price", label: "货品折扣价" },
 ];
 
 const clean = () => {
@@ -67,6 +69,32 @@ const clean = () => {
     { label: "总价", value: "---￥" },
     { label: "状态", value: "---" },
   ];
+};
+//新增销售单
+const dialogVisible = ref(false);
+const addorder = async()=> {
+  await postAddOrderAPI(
+   { "buyer": 0,
+  "courier": 0,
+  "orderGoodsDetailRequests": [
+    {
+      "actualAmount": 0,
+      "goodsName": "",
+      "goodsNumber": "",
+      "originAmount": 0
+    }
+  ],
+  "orderStatus": 0,
+  "sendPlace": "",
+  "totalAmount": 0}
+  ).then(() => {
+    console.log("新增成功");
+  });
+};
+
+const emitsGetvisible = (data: boolean) => {
+  dialogVisible.value = data;
+  getorder();
 };
 
 //条件查询销售单
@@ -145,21 +173,7 @@ const search = async () => {
 //   loading.value = false;
 };
 
-//新增销售单
-const dialogVisible = ref(false);
-const addorder = () => {
-  dialogVisible.value = true;
-  dynamicValidateForm.domains = [{
-    key: 1,
-    value: '',
-    number: 1,
-  },];
-};
 
-const emitsGetvisible = (data: boolean) => {
-  dialogVisible.value = data;
-  getorder();
-};
 
 //分页按钮
 

@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import '@/assets/style/reset.scss'
 import '@/assets/style/emp/iconfont.css'
 import { useTokenStore } from './stores/tokenData'
@@ -13,7 +15,7 @@ const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 app.use(router);
 app.use(pinia);
-
+app.use(ElementPlus)
 const token = useTokenStore();
 
 // 全局前置路由守卫 
