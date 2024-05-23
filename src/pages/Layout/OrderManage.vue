@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import {getOrderAPI,postDeleteOrderAPI,postAddOrderAPI,postUpdataOrderAPI} from "@/api/order";
+import { getOrderAPI, postDeleteOrderAPI, postAddOrderAPI, postUpdataOrderAPI } from "@/api/order";
 import { useMenuStore } from "@/stores/menuData";
 import { onMounted, ref, reactive } from "vue";
 import OrderPanel from "@/components/OrderPanel.vue";
 import { useOrderDataStore } from "@/stores/orderData";
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
+import { id } from "element-plus/es/locales.mjs";
 
 const { title } = useMenuStore();
 const { formInline, dynamicValidateForm } = useOrderDataStore();
@@ -78,56 +79,32 @@ const clean = () => {
     { label: "订单状态", value: "--" },
     { label: "下单时间", value: "--" },
     { label: "送货地址", value: "--" },
+    { label: "订单id", value: "--" },
   ];
 };
 //新增销售单
 const dialogVisible = ref(false);
-const addorder = async()=> {
+const addorder = async () => {
   await postAddOrderAPI(
-   { "buyer": 0,
-  "courier": 0,
-  "orderGoodsDetailRequests": [
     {
-      "actualAmount": 0,
-      "goodsName": "",
-      "goodsNumber": "",
-      "originAmount": 0
+      "buyer": 0,
+      "courier": 0,
+      "orderGoodsDetailRequests": [
+        {
+          "actualAmount": 0,
+          "goodsName": "",
+          "goodsNumber": "",
+          "originAmount": 0
+        }
+      ],
+      "orderStatus": 0,
+      "sendPlace": "",
+      "totalAmount": 0
     }
-  ],
-  "orderStatus": 0,
-  "sendPlace": "",
-  "totalAmount": 0}
   ).then(() => {
     console.log("新增成功");
   });
 };
-
-const emitsGetvisible = (data: boolean) => {
-  dialogVisible.value = data;
-  getorder();
-};
-//新增销售单
-const dialogVisible = ref(false);
-const addorder = async()=> {
-  await postAddOrderAPI(
-   { "buyer": 0,
-  "courier": 0,
-  "orderGoodsDetailRequests": [
-    {
-      "actualAmount": 0,
-      "goodsName": "",
-      "goodsNumber": "",
-      "originAmount": 0
-    }
-  ],
-  "orderStatus": 0,
-  "sendPlace": "",
-  "totalAmount": 0}
-  ).then(() => {
-    console.log("新增成功");
-  });
-};
-
 const emitsGetvisible = (data: boolean) => {
   dialogVisible.value = data;
   getorder();
@@ -162,6 +139,7 @@ const getOrderItem = () => {
 const getorder = async () => {
   loading.value = true;
   const res = await getOrderAPI();
+  console.log(res);
   const resData = res.data;
   total_page_number.value = resData.length;
   for (let i = 0; i < resData.length; ++i) {
@@ -176,7 +154,17 @@ onMounted(() => {
   title.second = "";
   getorder();
 });
-
+//更新订单信息
+const updateOrder = async () => {
+  await postUpdataOrderAPI(
+    {
+      "id": 0,
+      "orderStatus": 0
+    }
+  ).then((res) => {
+    console.log(res);
+  })
+}
 const search = async () => {
   //   clean();
   //   loading.value = true;
@@ -283,6 +271,9 @@ const check = async () => {
           <section class="button-box">
             <div class="button cash" @click="addorder">新增订单</div>
             <div class="button delete" @click="">删除订单</div>
+            <div class="button delete" @click="updateOrder">更新订单状态</div>
+            <el-input style="width: 100px" placeholder="订单id" clearable />
+             <el-input style="width: 240px" placeholder="更新状态1(已接单)/2(已送达)" clearable />
           </section>
           <section class="order-box">
             <div class="info-wrapper">
@@ -393,8 +384,9 @@ const check = async () => {
       &.cash {
         @include background_color("primary-200");
       }
-      &.delete{
-        background-color: rgb(241, 66, 66)!important;
+
+      &.delete {
+        background-color: rgb(241, 66, 66) !important;
       }
 
       &:hover {
