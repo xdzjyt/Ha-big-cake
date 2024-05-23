@@ -24,6 +24,7 @@ const total_page_number = ref(0);
 //订单info
 
 const order_info = ref([
+  { label: "订单id", value: "--" },
   { label: "买家id", value: "--" },
   { label: "骑手id", value: "--" },
   { label: "商家id", value: "--" },
@@ -37,6 +38,7 @@ const order_info = ref([
 
 // 表格数据
 interface order {
+  orderId:number
   buyer: number
   courier: number
   deliveryTime: string
@@ -95,21 +97,22 @@ const getOrderItem = () => {
     tableData.value[i] = { goodsName: "", goodsNumber: '0102', actualAmount: 0, originAmount: 0 };
     tableData.value[i] = order_item.orderDetailResponses[i];
   }
-  order_info.value[0].value = order_item.buyer.toString();
-  order_info.value[1].value = order_item.courier.toString();
-  order_info.value[2].value = order_item.merchant.toString();
-  order_info.value[3].value = order_item.totalAmount.toString() + "￥";
-  order_info.value[4].value = order_status[order_item.orderStatus];
-  order_info.value[5].value = order_item.deliveryTime ? order_item.deliveryTime.replace(/[T+]/g, ' | ') : '--';
-  order_info.value[6].value = order_item.orderTime ? order_item.orderTime.replace(/[T+]/g, ' | ') : '--';
-  order_info.value[7].value = order_item.sendPlace;
-  order_info.value[8].value = order_item.orderAppraise;
+  order_info.value[0].value = order_item.orderId.toString();
+  order_info.value[1].value = order_item.buyer.toString();
+  order_info.value[2].value = order_item.courier.toString();
+  order_info.value[3].value = order_item.merchant.toString();
+  order_info.value[4].value = order_item.totalAmount.toString() + "￥";
+  order_info.value[5].value = order_status[order_item.orderStatus - 1];
+  order_info.value[6].value = order_item.deliveryTime ? order_item.deliveryTime.replace(/[T+]/g, ' | ') : '--';
+  order_info.value[7].value = order_item.orderTime ? order_item.orderTime.replace(/[T+]/g, ' | ') : '--';
+  order_info.value[8].value = order_item.sendPlace;
+  order_info.value[9].value = order_item.orderAppraise;
 };
 
 const getorder = async () => {
   loading.value = true;
   const res = await getOrderAPI();
-  const resData = res.data;
+  const resData = res.data.reverse();
   total_page_number.value = resData.length;
   for (let i = 0; i < resData.length; ++i) {
     orderList.value[i] = resData[i];
@@ -161,11 +164,19 @@ const search = async () => {
 const dialogVisible = ref(false);
 const addorder = () => {
   dialogVisible.value = true;
-  dynamicValidateForm.domains = [{
-    key: 1,
-    value: '',
-    number: 1,
-  },];
+  dynamicValidateForm.domains = [
+    {
+      actualAmount: 0,
+      goodsName: '',
+      goodsNumber: '',
+      originAmount: 0,
+    },
+  ];
+  formInline.buyer = 0;
+  formInline.courier = 0;
+  formInline.orderStatus = '1';
+  formInline.sendPlace = '';
+  formInline.totalAmount = 0;
 };
 
 const emitsGetvisible = (data: boolean) => {
@@ -233,6 +244,10 @@ const check = async () => {
     <el-scrollbar>
       <el-container style="display: flex; justify-content: space-between">
         <el-main>
+          <section class="button-box">
+            <div class="button cash" @click="addorder">新增订单</div>
+            <div class="button delete" @click="">删除订单</div>
+          </section>
           <section class="button-box page">
             <div class="button" @click="prev">上一页</div>
             <div class="button" @click="next">下一页</div>
@@ -240,10 +255,6 @@ const check = async () => {
               <span>当前页面：</span><input class="page-index" type="number" @blur="jumpTo" v-model="page_index" />
               <div class="total-data">共有{{ total_page_number }}单</div>
             </div>
-          </section>
-          <section class="button-box">
-            <div class="button cash" @click="addorder">新增订单</div>
-            <div class="button delete" @click="">删除订单</div>
           </section>
           <section class="order-box">
             <div class="info-wrapper">
@@ -264,7 +275,7 @@ const check = async () => {
             </div>
           </section>
           <el-dialog v-model="dialogVisible" width="600" draggable>
-            <OrderPanel title="销售单结账进行中" @getvisible="emitsGetvisible" />
+            <OrderPanel title="订单结算进行中" @getvisible="emitsGetvisible" />
           </el-dialog>
           <el-dialog v-model="returnVisible" width="350">
             <div class="title">
@@ -354,8 +365,9 @@ const check = async () => {
       &.cash {
         @include background_color("primary-200");
       }
-      &.delete{
-        background-color: rgb(241, 66, 66)!important;
+
+      &.delete {
+        background-color: rgb(241, 66, 66) !important;
       }
 
       &:hover {

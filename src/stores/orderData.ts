@@ -10,6 +10,7 @@ interface DomainItem {
 
 export const useOrderDataStore = defineStore('order', () => {
   const formInline = ref<{
+    orderId: number
     buyer: number
     courier: number
     deliveryTime: string
@@ -21,16 +22,17 @@ export const useOrderDataStore = defineStore('order', () => {
     sendPlace: string
     totalAmount: number
   }>({
+    orderId: 1,
     buyer: 0,
     courier: 0,
     deliveryTime: '2024-01-01',
     merchant: 0,
     orderAppraise: 'very good!',
     orderDetailResponses: [],
-    orderStatus: 0,
+    orderStatus: 1,
     orderTime: '2024-01-01',
-    sendPlace: 'weihai',
-    totalAmount: 125
+    sendPlace: '',
+    totalAmount: 0
   });
   const dynamicValidateForm = reactive<{
     domains: DomainItem[]
